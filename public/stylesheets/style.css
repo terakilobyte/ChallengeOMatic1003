@@ -1,0 +1,38 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.challengeList {
+  list-style: none;
+  width: auto;
+  margin: auto;
+}
+
+.challenge {
+  width: 99%;
+  margin: 2vh auto;
+  padding: 2vh;
+  box-shadow: 0 0 2vh #ccc;
+  transition: color 0.1s, background-color 0.1s;
+  background-color: white;
+  color: #00B7FF;
+}
+
+.challenge:hover {
+  color: white;
+  background-color: #00B7FF;
+}
+
+.button {
+  color: white;
+  background-color: #00B7FF;
+  padding: 2vh;
+  border-radius: 2vh;
+  width: 8vh;
+  text-align: center;
+}
