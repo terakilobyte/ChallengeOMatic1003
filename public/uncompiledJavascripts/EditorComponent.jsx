@@ -1,5 +1,9 @@
 var handleChallengeClick;
+var reStart;
+var exportCurrentFile;
 
+var currentFile;
+var currentFileData;
 var codeMirrors = [];
 
 var EditorComponent = React.createClass({
@@ -9,12 +13,12 @@ var EditorComponent = React.createClass({
         document.getElementById(key),
         {
           lineNumbers: true,
-          mode: 'text',
-          theme: 'monokai',
+          mode: 'javascript',
+          theme: 'dracula',
           runnable: true,
           matchBrackets: true,
           autoCloseBrackets: true,
-          scrollbarStyle: 'null',
+          scrollbarStyle: 'simple',
           lineWrapping: true,
           gutters: ['CodeMirror-lint-markers']
         }
@@ -40,8 +44,6 @@ var EditorComponent = React.createClass({
 
       if(key === "description" || key === "tests" || key === "challengeSeed"){
         data = data.replace(/\"\s*?\,\s*?\"/gi, "\n");
-
-        console.log(data);
       }
 
       data = data.split('"');
@@ -51,13 +53,13 @@ var EditorComponent = React.createClass({
 
       data = data.join('');
 
-      inputs.push(<li><h4>{key}</h4><textarea id = {key} name = {key} defaultValue = {data} /></li>);
+      inputs.push(<li className = "input"><h4>{key}</h4><textarea id = {key} name = {key} defaultValue = {data} /></li>);
     }
 
     return(
       <form>
-        <ul>
-          <li><h3 className = "button">Export!</h3></li>
+        <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
+        <ul className = "inputList">
           {inputs}
         </ul>
       </form>
@@ -89,11 +91,53 @@ var EditorContainerComponent = React.createClass({
       return(challenge.id === $(e.target).attr('data'));
     })});
   },
+  exportCurrentFile: function(){
+    var newChallengeData = {};
+
+    for (var i in codeMirrors){
+      var codeMirror = codeMirrors[i];
+
+      if(codeMirror.name === "tests" || codeMirror.name === "description" || codeMirror.name === "challengeSeed"){
+        newChallengeData[codeMirror.name] = codeMirror.mirror.getValue().split("\n");
+      }
+      else{
+        newChallengeData[codeMirror.name] = codeMirror.mirror.getValue();
+      }
+    }
+
+    var challengeToReplace;
+
+    for(var i in currentFileData){
+      var challenge = currentFileData[i];
+      if(challenge.id === newChallengeData.id){
+        challengeToReplace = i;
+      }
+    }
+
+    currentFileData[challengeToReplace] = newChallengeData;
+
+    $.ajax({
+      method: "post",
+      data: {file: currentFile.name, data: JSON.stringify(currentFileData)},
+      dataType: "text"
+    }).done(function(data){
+      window.location = data;
+    });
+
+
+    //this.setState({});
+  },
+  reStart: function(){
+    this.setState({"mode": "select", "data": []});
+  },
   getInitialState: function(){
     return({
       "mode": "select",
       "data": []
     });
+  },
+  componentDidUpdate: function(){
+    this.componentDidMount();
   },
   componentDidMount: function(){
     var self = this;
@@ -102,10 +146,14 @@ var EditorContainerComponent = React.createClass({
         var files = $(this).prop('files');
 
         var file = files[0];
+
+        currentFile = file;
+
         var reader = new FileReader();
 
         reader.onload = function(data){
           data = JSON.parse(data.srcElement.result).challenges;
+          currentFileData = data;
           self.setState({"mode":"challengeSelect", "data": data});
         };
         reader.readAsText(file);
@@ -114,6 +162,8 @@ var EditorContainerComponent = React.createClass({
   },
   render: function(){
     handleChallengeClick = this.handleChallengeClick;
+    exportCurrentFile = this.exportCurrentFile;
+    reStart = this.reStart;
     if(this.state.mode === "select"){
       return(
         <div className = "picker">

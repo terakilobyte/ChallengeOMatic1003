@@ -28,6 +28,35 @@ a {
   background-color: #00B7FF;
 }
 
+.menu {
+  display: flex;
+}
+
+.menu > a {
+  display: inline-flex;
+  flex: 1 0 auto;
+  border-bottom: 0.5vh solid #00B7FF;
+  color: rgb(51, 51, 51);
+  padding: 1vh;
+  margin: 1vh;
+  border-radius: 0.5vh;
+  transition: color 0.3s, background-color 0.3s, border-bottom 0.3s;
+}
+
+.menu > a:hover {
+  border-bottom: 0.5vh solid #00B7FF;
+  background-color: rgb(51, 51, 51);
+  color: white;
+}
+
+.inputList{
+  list-style: none;
+}
+
+.input > .CodeMirror{
+  margin: 3vh;
+}
+
 .button {
   color: white;
   background-color: #00B7FF;
