@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 
+fs.mkdir("./../public/cache", function(){
+
+});
+
 router.post('/', function(req, res, next){
   fs.writeFile("./../public/cache/"+req.body.file, req.body.data
     .replace(/\[\{\"/gi, "[\n\t{\n\t\t\"")
