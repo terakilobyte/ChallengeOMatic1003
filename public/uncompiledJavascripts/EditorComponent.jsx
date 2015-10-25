@@ -1,5 +1,6 @@
 var handleChallengeClick;
 var reStart;
+var saveCurrentFile;
 var exportCurrentFile;
 
 var currentFile;
@@ -58,7 +59,7 @@ var EditorComponent = React.createClass({
 
     return(
       <form>
-        <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
+        <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {saveCurrentFile}><h3>Save</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
         <ul className = "inputList">
           {inputs}
         </ul>
@@ -91,7 +92,7 @@ var EditorContainerComponent = React.createClass({
       return(challenge.id === $(e.target).attr('data'));
     })});
   },
-  exportCurrentFile: function(){
+  saveCurrentChallenge: function(){
     var newChallengeData = {};
 
     for (var i in codeMirrors){
@@ -115,7 +116,9 @@ var EditorContainerComponent = React.createClass({
     }
 
     currentFileData[challengeToReplace] = newChallengeData;
-
+  },
+  exportCurrentFile: function(){
+    this.saveCurrentChallenge();
     $.ajax({
       method: "post",
       data: {file: currentFile.name, data: JSON.stringify(currentFileData)},
@@ -123,8 +126,6 @@ var EditorContainerComponent = React.createClass({
     }).done(function(data){
       window.location = data;
     });
-
-
     //this.setState({});
   },
   reStart: function(){
@@ -162,6 +163,7 @@ var EditorContainerComponent = React.createClass({
   },
   render: function(){
     handleChallengeClick = this.handleChallengeClick;
+    saveCurrentFile = this.saveCurrentChallenge;
     exportCurrentFile = this.exportCurrentFile;
     reStart = this.reStart;
     if(this.state.mode === "select"){
