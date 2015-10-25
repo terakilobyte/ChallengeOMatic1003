@@ -1,0 +1,22 @@
+{
+  "name": "ChallengeOMatic1000",
+  "version": "0.0.0",
+  "homepage": "https://github.com/FreeCodeCamp/ChallengeOMatic1000",
+  "authors": [
+    "\u001b[C\u001b[D\u001b[3~\u001b[3~\u001b[3~\u001b[3~\u001b[D\u001b[C)"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "codemirror": "~5.8.0",
+    "jquery": "~2.1.4",
+    "react": "~0.14.0"
+  }
+}
