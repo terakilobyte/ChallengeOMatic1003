@@ -59,7 +59,6 @@ var EditorComponent = React.createClass({
 
     return(
       <form>
-        <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {saveCurrentFile}><h3>Save</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
         <ul className = "inputList">
           {inputs}
         </ul>
@@ -126,10 +125,15 @@ var EditorContainerComponent = React.createClass({
     }).done(function(data){
       window.location = data;
     });
-    //this.setState({});
   },
   reStart: function(){
-    this.setState({"mode": "select", "data": []});
+    if(this.state.mode === "challengeEdit"){
+      this.setState({"mode": "challengeSelect", "data": currentFileData});
+    }
+    else{
+      this.setState({"mode": "select", "data": []});
+    }
+
   },
   getInitialState: function(){
     return({
@@ -175,12 +179,18 @@ var EditorContainerComponent = React.createClass({
     }
     else if(this.state.mode === "challengeSelect"){
       return(
-        <SelectDialogComponent data = {this.state.data} />
+        <div>
+          <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {saveCurrentFile}><h3>Save</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
+          <SelectDialogComponent data = {this.state.data} />
+        </div>
       );
     }
     else {
       return(
-        <EditorComponent data = {this.state.data} />
+        <div>
+          <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {saveCurrentFile}><h3>Save</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
+          <EditorComponent data = {this.state.data} />
+        </div>
       );
     }
   }
