@@ -7,6 +7,14 @@ var currentFile;
 var currentFileData;
 var codeMirrors = [];
 
+var Menu = React.createClass({
+  render: function(){
+    return(
+      <ul className = "menu"><a onClick = {reStart}>Back</a><a onClick = {saveCurrentFile}>Save</a><a onClick = {exportCurrentFile}>Export!</a></ul>
+    );
+  }
+});
+
 var EditorComponent = React.createClass({
   componentDidMount: function(){
     for(var key in this.props.data[0]) {
@@ -180,7 +188,7 @@ var EditorContainerComponent = React.createClass({
     else if(this.state.mode === "challengeSelect"){
       return(
         <div>
-          <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {saveCurrentFile}><h3>Save</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
+          <Menu />
           <SelectDialogComponent data = {this.state.data} />
         </div>
       );
@@ -188,7 +196,7 @@ var EditorContainerComponent = React.createClass({
     else {
       return(
         <div>
-          <ul className = "menu"><a onClick = {reStart}><h3>Back</h3></a><a onClick = {saveCurrentFile}><h3>Save</h3></a><a onClick = {exportCurrentFile}><h3>Export!</h3></a></ul>
+          <Menu />
           <EditorComponent data = {this.state.data} />
         </div>
       );
