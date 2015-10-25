@@ -1,16 +1,50 @@
 var handleChallengeClick;
+var handleOpenedFileClick;
+var handleFileLoad;
 var reStart;
+var getCurrentMode;
 var saveCurrentFile;
 var exportCurrentFile;
+
+var mode;
+var fileStore = [];
 
 var currentFile;
 var currentFileData;
 var codeMirrors = [];
 
+var ActiveFilesComponent = React.createClass({
+  render: function(){
+    var openFiles = fileStore.map(function(file){
+      return(
+        <a className = "file" onClick = {handleOpenedFileClick}>{Object.keys(file)[0]}</a>
+      );
+    });
+    return(
+      <ul className = "menu">{openFiles}</ul>
+    );
+  }
+});
+
 var Menu = React.createClass({
   render: function(){
+    var back = "";
+    var fileSelect = "";
+
+    mode = getCurrentMode();
+
+    if(mode === "challengeEdit"){
+      back = <a onClick = {reStart}>Back</a>;
+    }
+    else {
+      fileSelect = <a><div className = "picker"><input id = "file" type = "file"/></div></a>;
+    }
+
     return(
-      <ul className = "menu"><a onClick = {reStart}>Back</a><a onClick = {saveCurrentFile}>Save</a><a onClick = {exportCurrentFile}>Export!</a></ul>
+      <div>
+        <ActiveFilesComponent />
+        <ul className = "menu">{back} {fileSelect}<a onClick = {saveCurrentFile}>Save All</a><a onClick = {exportCurrentFile}>Export All</a></ul>
+      </div>
     );
   }
 });
@@ -99,7 +133,7 @@ var EditorContainerComponent = React.createClass({
       return(challenge.id === $(e.target).attr('data'));
     })});
   },
-  saveCurrentChallenge: function(){
+  saveCurrentChallenge: function(cb){
     var newChallengeData = {};
 
     for (var i in codeMirrors){
@@ -122,17 +156,36 @@ var EditorContainerComponent = React.createClass({
       }
     }
 
-    currentFileData[challengeToReplace] = newChallengeData;
+    if(challengeToReplace !== undefined){
+      currentFileData[challengeToReplace] = newChallengeData;
+    }
+
+    if(fileStore.filter(function(challenge){return(challenge[currentFile.name])}).length === 0){
+      var challengeDataObject = {};
+      challengeDataObject[currentFile.name] = currentFileData;
+
+      fileStore.push(challengeDataObject);
+    }
+    if(typeof cb !== 'undefined' && typeof cb === 'function'){
+      setTimeout(cb(), 1000);
+    }
   },
   exportCurrentFile: function(){
-    this.saveCurrentChallenge();
-    $.ajax({
-      method: "post",
-      data: {file: currentFile.name, data: JSON.stringify(currentFileData)},
-      dataType: "text"
-    }).done(function(data){
-      window.location = data;
-    });
+    function exportChain(){
+        var fileName = Object.keys(fileStore[0])[0];
+        $.ajax({
+          method: "post",
+          async: false,
+          data: {file: fileName, data: JSON.stringify(fileStore[0][fileName])},
+          dataType: "text"
+        }).done(function (data) {
+          if (fileStore.length > 0) {
+            window.location = data;
+            setTimeout(function(){fileStore.shift();exportChain();}, 500);
+          }
+        });
+    }
+    this.saveCurrentChallenge(exportChain());
   },
   reStart: function(){
     if(this.state.mode === "challengeEdit"){
@@ -143,18 +196,15 @@ var EditorContainerComponent = React.createClass({
     }
 
   },
-  getInitialState: function(){
-    return({
-      "mode": "select",
-      "data": []
-    });
+  handleOpenedFileClick: function(e){
+    var fileToOpen = fileStore.filter(function(file){
+      return(Object.keys(file)[0] === e.target.text);
+    })[0][e.target.text];
+    this.setState({"mode": "challengeSelect", "data": fileToOpen});
   },
-  componentDidUpdate: function(){
-    this.componentDidMount();
-  },
-  componentDidMount: function(){
+  handelFileLoad: function(){
     var self = this;
-    if(this.state.mode === "select"){
+    if(this.state.mode !== "challengeEdit"){
       $('#file').on('change', function(){
         var files = $(this).prop('files');
 
@@ -162,26 +212,57 @@ var EditorContainerComponent = React.createClass({
 
         currentFile = file;
 
-        var reader = new FileReader();
+        if(fileStore.filter(function(challengeFile){return(Object.keys(challengeFile)[0] === currentFile.name);}).length === 0) {
+          var reader = new FileReader();
 
-        reader.onload = function(data){
-          data = JSON.parse(data.srcElement.result).challenges;
-          currentFileData = data;
-          self.setState({"mode":"challengeSelect", "data": data});
-        };
-        reader.readAsText(file);
+          reader.onload = function(data){
+            data = JSON.parse(data.srcElement.result).challenges;
+            currentFileData = data;
+            saveCurrentFile();
+            self.setState({"mode":"challengeSelect", "data": data});
+          };
+          reader.readAsText(file);
+        }
+        else {
+          var data = fileStore.filter(function(challengeFile){
+            return(Object.keys(challengeFile)[0] === currentFile.name);
+          })[0];
+          currentFileData = data[Object.keys(data)[0]];
+          saveCurrentFile();
+          self.setState({"mode":"challengeSelect", "data": currentFileData});
+        }
       });
     }
   },
+  getInitialState: function(){
+    return({
+      "mode": "select",
+      "data": []
+    });
+  },
+  componentDidUpdate: function(){
+    this.handelFileLoad();
+  },
+  componentDidMount: function(){
+    this.componentDidUpdate();
+  },
+  getCurrentMode : function(){
+    return(this.state.mode);
+  },
   render: function(){
     handleChallengeClick = this.handleChallengeClick;
+    handleOpenedFileClick = this.handleOpenedFileClick;
+    handleFileLoad = this.handelFileLoad;
     saveCurrentFile = this.saveCurrentChallenge;
     exportCurrentFile = this.exportCurrentFile;
+    getCurrentMode = this.getCurrentMode;
     reStart = this.reStart;
     if(this.state.mode === "select"){
       return(
-        <div className = "picker">
-          <input id = "file" type = "file"/>
+        <div className = "Init">
+          <div className = "picker">
+            <input id = "file" type = "file"/>
+          </div>
         </div>
       );
     }

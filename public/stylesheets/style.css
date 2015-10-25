@@ -17,6 +17,16 @@ a {
   -ms-user-select: none;
   user-select: none;
 }
+.Init {
+  width: 110vh;
+  min-width: 176px;
+  margin: auto;
+  background-color: white;
+  padding: 4vh;
+  text-align: center;
+  box-shadow: 0 0 8vh #ccc;
+  border-radius: 3vh;
+}
 
 .challengeList {
   list-style: none;
@@ -47,6 +57,7 @@ a {
 
 .menu {
   display: flex;
+  overflow-x: auto;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -55,12 +66,12 @@ a {
   user-select: none;
 }
 
-.menu > a {
+.menu a {
   display: block;
   flex: 1 0 auto;
   border-bottom: 0.5vh solid #00B7FF;
   background-color: white;
-  color: rgb(51, 51, 51);
+  color: rgb(51, 51, 51)!important;
   padding: 4vh;
   margin: 2vh;
   border-radius: 0.75vh;
@@ -69,16 +80,12 @@ a {
   box-shadow: 0 0 3vh #ccc;
 }
 
-.menu > a:hover {
+.menu a:hover {
   border-bottom: 0.5vh solid #00B7FF;
   background-color: rgb(51, 51, 51);
-  color: white;
+  color: white!important;
 }
 
-.menu > a:active {
-  color: white;
-  background-color: #656565;
-}
 
 .inputList{
   list-style: none;
