@@ -11,13 +11,13 @@ Assumes basic node.js and MEAN stack install.
 3. In another term:  
 `./public/uncompiledJavascripts/ --watch --out-dir ./public/js/`
 4. Back in the original term
-  Run Option One:
-    1. `node bin/www`
-    2. Connect to http://localhost:5252
-  Run Option Two (Only for if option one crashes):
-    1. `cd bin`
-    2. `node www`
-    3. Connect to http://localhost:5252
+  * Run Option One:
+    * `node bin/www`
+    * Connect to http://localhost:5252
+  * Run Option Two (Only for if option one crashes):
+    * `cd bin`
+    * `node www`
+    * Connect to http://localhost:5252
 
 ## Usage
 * Click "Choose File" and select a local \*.json File
