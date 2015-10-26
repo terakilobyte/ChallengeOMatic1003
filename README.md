@@ -5,6 +5,7 @@ This is a work in progress, it may crash/burn/fold/spindle/mutilate.  Do not tau
 
 ## Install Instructions
 Assumes basic node.js and MEAN stack install.
+
 1. Clone to local directory
 2. `npm install && bower install`
 3. In another term:  
