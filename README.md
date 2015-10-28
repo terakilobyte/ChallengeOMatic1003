@@ -9,7 +9,7 @@ Assumes basic node.js and MEAN stack install.
 1. Clone to local directory
 2. `npm install && bower install`
 3. In another term:  
-`./public/uncompiledJavascripts/ --watch --out-dir ./public/js/`
+`babel ./public/uncompiledJavascripts/ --watch --out-dir ./public/js/`
 4. Back in the original term
   * Run Option One:
     * `node bin/www`
