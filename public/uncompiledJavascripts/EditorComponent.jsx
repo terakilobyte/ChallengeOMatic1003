@@ -89,12 +89,15 @@ var EditorComponent = React.createClass({
         data = data.replace(/\"\s*?\,\s*?\"/gi, "\n");
       }
 
-      data = data.split('"');
+      if(data[0] === '"'){
+        data = data.slice(1);
+        data = data.slice(0, data.length-2);
+      }
 
-      data.shift();
-      data.pop();
-
-      data = data.join('');
+      if(data[0] === "["){
+        data = data.slice(2);
+        data = data.slice(0, data.length-3);
+      }
 
       inputs.push(<li className = "input"><h4>{key}</h4><textarea id = {key} name = {key} defaultValue = {data} /></li>);
     }
@@ -137,13 +140,12 @@ var EditorContainerComponent = React.createClass({
     var newChallengeData = {};
 
     for (var i in codeMirrors){
-      var codeMirror = codeMirrors[i];
 
       if(codeMirror.name === "tests" || codeMirror.name === "description" || codeMirror.name === "challengeSeed"){
-        newChallengeData[codeMirror.name] = codeMirror.mirror.getValue().split("\n");
+        newChallengeData[codeMirror.name] = JSON.stringify(codeMirror.mirror.getValue().split("\n"));
       }
       else{
-        newChallengeData[codeMirror.name] = codeMirror.mirror.getValue();
+        newChallengeData[codeMirror.name] = JSON.stringify(codeMirror.mirror.getValue());
       }
     }
 
@@ -172,7 +174,9 @@ var EditorContainerComponent = React.createClass({
   },
   exportCurrentFile: function(){
     function exportChain(){
+      if(fileStore[0] !== undefined && fileStore[0] !== null) {
         var fileName = Object.keys(fileStore[0])[0];
+        console.log(fileStore[0][fileName]);
         $.ajax({
           method: "post",
           async: false,
@@ -181,9 +185,13 @@ var EditorContainerComponent = React.createClass({
         }).done(function (data) {
           if (fileStore.length > 0) {
             window.location = data;
-            setTimeout(function(){fileStore.shift();exportChain();}, 500);
+            setTimeout(function () {
+              fileStore.shift();
+              exportChain();
+            }, 500);
           }
         });
+      }
     }
     this.saveCurrentChallenge(exportChain());
   },
