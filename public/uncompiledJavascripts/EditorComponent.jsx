@@ -13,6 +13,21 @@ var currentFile;
 var currentFileData;
 var codeMirrors = [];
 
+var typeList = [
+  "waypoint",
+  "bonfire",
+  "zipline"
+];
+
+var challengeTypeList = [
+  {val: 0, displayName: "html-waypoint"},
+  {val: 1, displayName: "js-waypoint"},
+  {val: 2, displayName: "link"},
+  {val: 5, displayName: "bonfire"},
+  {val: 6, displayName: "hike"},
+  {val: 7, displayName: "zipline-waypoint"}
+];
+
 var ActiveFilesComponent = React.createClass({
   render: function(){
     var openFiles = fileStore.map(function(file){
@@ -52,23 +67,28 @@ var Menu = React.createClass({
 var EditorComponent = React.createClass({
   componentDidMount: function(){
     for(var key in this.props.data[0]) {
-      codeMirrors.push({name: key, mirror: CodeMirror.fromTextArea(
-        document.getElementById(key),
-        {
-          lineNumbers: true,
-          mode: 'javascript',
-          theme: 'dracula',
-          runnable: true,
-          matchBrackets: true,
-          autoCloseBrackets: true,
-          scrollbarStyle: 'simple',
-          lineWrapping: true,
-          gutters: ['CodeMirror-lint-markers']
-        }
-      )});
+      if(key === "id" || key === "title" || key === "description" || key === "tests" || key === "challengeSeed") {
+        codeMirrors.push({
+          name: key, mirror: CodeMirror.fromTextArea(
+            document.getElementById(key),
+            {
+              lineNumbers: true,
+              mode: 'javascript',
+              theme: 'dracula',
+              runnable: true,
+              matchBrackets: true,
+              autoCloseBrackets: true,
+              scrollbarStyle: 'simple',
+              lineWrapping: true,
+              gutters: ['CodeMirror-lint-markers']
+            }
+          )
+        });
+      }
     }
 
     codeMirrors.map(function(mirrorData){
+      mirrorData.mirror.setValue(mirrorData.mirror.getValue().replace(/\\"/gi, '"'));
       if(mirrorData.name === "description" || mirrorData.name === "tests" || mirrorData.name === "challengeSeed"){
         mirrorData.mirror.setSize("100%", "52vh");
       }
@@ -83,23 +103,52 @@ var EditorComponent = React.createClass({
     var inputs = [];
 
     for(var key in this.props.data[0]){
-      var data = JSON.stringify(this.props.data[0][key]);
+      if(key === "id" || key === "title" || key === "description" || key === "tests" || key === "challengeSeed"){
+        var data = JSON.stringify(this.props.data[0][key]);
 
-      if(key === "description" || key === "tests" || key === "challengeSeed"){
-        data = data.replace(/\"\s*?\,\s*?\"/gi, "\n");
+        if(key === "description" || key === "tests" || key === "challengeSeed"){
+          data = data.replace(/\"\s*?\,\s*?\"/gi, "\n");
+        }
+
+        if(data[0] === '"'){
+          data = data.slice(1);
+          data = data.slice(0, data.length-1);
+        }
+
+        if(data[0] === "["){
+          data = data.slice(2);
+          data = data.slice(0, data.length-2);
+        }
+
+        inputs.push(<li className = "input"><h4>{key}</h4><textarea id = {key} name = {key} defaultValue = {data} /></li>);
       }
+      else if(key === "type"){
 
-      if(data[0] === '"'){
-        data = data.slice(1);
-        data = data.slice(0, data.length-2);
+        var options = typeList.map(function(option){
+          return(<option value = {option}>{option}</option>);
+        });
+
+        console.log(JSON.stringify(this.props.data[0][key]));
+        inputs.push(
+          <li className = "input"><h4>{key}</h4>
+            <select id = {key} defaultValue = {JSON.stringify(this.props.data[0][key])}>
+              {options}
+            </select>
+          </li>
+        );
       }
-
-      if(data[0] === "["){
-        data = data.slice(2);
-        data = data.slice(0, data.length-3);
+      else if(key === "challengeType"){
+        var options = challengeTypeList.map(function(option){
+          return(<option value = {option.val}>{option.displayName}</option>);
+        });
+        inputs.push(
+          <li className = "input"><h4>{key}</h4>
+            <select id = {key} defaultValue = {JSON.stringify(this.props.data[0][key])}>
+              {options}
+            </select>
+          </li>
+        );
       }
-
-      inputs.push(<li className = "input"><h4>{key}</h4><textarea id = {key} name = {key} defaultValue = {data} /></li>);
     }
 
     return(
@@ -114,9 +163,10 @@ var EditorComponent = React.createClass({
 
 var SelectDialogComponent = React.createClass({
   render: function(){
-    var data = this.props.data.map(function(challenge){
+    var challenge;
+    var data = currentFileData.map(function(challenge){
       return(
-        <li className = "challenge" data = {challenge.id} onClick = {handleChallengeClick}>
+        <li className = "challenge" data-challengeid = {challenge.id} onClick = {handleChallengeClick}>
           {challenge.title}
         </li>
       );
@@ -133,13 +183,19 @@ var SelectDialogComponent = React.createClass({
 var EditorContainerComponent = React.createClass({
   handleChallengeClick: function(e){
     this.setState({"mode": "challengeEdit", "data" : this.state.data.filter(function(challenge){
-      return(challenge.id === $(e.target).attr('data'));
+      return(challenge.id === $(e.target).attr('data-challengeid'));
     })});
   },
   saveCurrentChallenge: function(cb){
-    var newChallengeData = {};
+    var self = this;
+    var newChallengeData = {
+      type: $('#type').val(),
+      challengeType: parseInt($('#challengeType').val())
+    };
 
     for (var i in codeMirrors){
+
+      var codeMirror = codeMirrors[i];
 
       if(codeMirror.name === "tests" || codeMirror.name === "description" || codeMirror.name === "challengeSeed"){
         newChallengeData[codeMirror.name] = JSON.stringify(codeMirror.mirror.getValue().split("\n"));
@@ -176,7 +232,6 @@ var EditorContainerComponent = React.createClass({
     function exportChain(){
       if(fileStore[0] !== undefined && fileStore[0] !== null) {
         var fileName = Object.keys(fileStore[0])[0];
-        console.log(fileStore[0][fileName]);
         $.ajax({
           method: "post",
           async: false,
@@ -208,6 +263,7 @@ var EditorContainerComponent = React.createClass({
     var fileToOpen = fileStore.filter(function(file){
       return(Object.keys(file)[0] === e.target.text);
     })[0][e.target.text];
+    currentFileData = fileToOpen;
     this.setState({"mode": "challengeSelect", "data": fileToOpen});
   },
   handelFileLoad: function(){
@@ -278,7 +334,7 @@ var EditorContainerComponent = React.createClass({
       return(
         <div>
           <Menu />
-          <SelectDialogComponent data = {this.state.data} />
+          <SelectDialogComponent />
         </div>
       );
     }
