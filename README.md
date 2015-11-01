@@ -11,10 +11,7 @@ Assumes basic node.js and MEAN stack install.
 3. In another term:  
 `babel ./public/uncompiledJavascripts/ --watch --out-dir ./public/js/`
 4. Back in the original term
-  * Run Option One:
-    * `node bin/www`
-    * Connect to http://localhost:5252
-  * Run Option Two (Only for if option one crashes):
+  * Running:
     * `cd bin`
     * `node www`
     * Connect to http://localhost:5252
