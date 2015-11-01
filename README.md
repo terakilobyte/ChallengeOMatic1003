@@ -11,10 +11,9 @@ Assumes basic node.js and MEAN stack install.
 3. In another term:  
 `babel ./public/uncompiledJavascripts/ --watch --out-dir ./public/js/`
 4. Back in the original term
-  * Running:
-    * `cd bin`
-    * `node www`
-    * Connect to http://localhost:5252
+  * `cd bin`
+  * `node www`
+  * Connect to http://localhost:5252
 
 ## Usage
 * Click "Choose File" and select a local \*.json File
