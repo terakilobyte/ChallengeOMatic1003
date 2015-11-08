@@ -3,13 +3,15 @@ import Menu from './Menu';
 import ChallengeSelect from './ChallengeSelect';
 import ChallengeEdit from './ChallengeEdit';
 import SelectChallenge from './SelectChallenge';
+import Editor from './Editor';
 
 export default class GrandCentralStation extends Component {
   constructor(props) {
     super (props);
     this.state = {
       'view': 'ChallengeSelect',
-      'fileStore': {}
+      'fileStore': {},
+      'activeChallenge': {}
     };
     this.backView = this.backView.bind(this);
     this.saveFiles = this.saveFiles.bind(this);
@@ -20,7 +22,6 @@ export default class GrandCentralStation extends Component {
   }
 
   backView() {
-    console.log();
     if (this.state.view === 'ChallengeEdit') {
       this.setState({'view': 'ChallengeSelect'});
     }
@@ -44,16 +45,21 @@ export default class GrandCentralStation extends Component {
     const reader = new FileReader();
 
     reader.onload = function(upload) {
-      console.log(this);
       this.setState({
-        'fileStore': JSON.parse(upload.target.result)
+        'fileStore': JSON.parse(upload.target.result),
+        'activeChallenge': {}
       });
     }.bind(this);
     reader.readAsText(file);
   }
 
-  handleChallengeClick() {
-    console.log('I wrote the damn function, happy?');
+  handleChallengeClick(id) {
+    this.setState({
+      'activeChallenge':
+        this.state.fileStore.challenges.filter((challenge) => {
+          return challenge.id === id;
+      }).pop(),
+    });
   }
 
   render() {
@@ -97,20 +103,29 @@ export default class GrandCentralStation extends Component {
     }
 
     if (Object.keys(this.state.fileStore).length) {
-      console.log('fileStore has length');
       selectChallenges = <SelectChallenge
         data = {this.state.fileStore}
         challengeClick = {this.handleChallengeClick}
         />;
     }
 
-    return (
-      <div className = 'app'>
-        <Menu elements = {elements} />
-        {componentToRender}
-        {selectChallenges}
-      </div>
-    );
+    if (Object.keys(this.state.activeChallenge).length) {
+      return (
+        <div className = 'app'>
+          <Menu elements = {elements} />
+          <Editor challenge={this.state.activeChallenge} />
+        </div>
+      );
+    } else {
+
+      return (
+        <div className = 'app'>
+          <Menu elements = {elements} />
+          {componentToRender}
+          {selectChallenges}
+        </div>
+      );
+    }
   }
 }
 
