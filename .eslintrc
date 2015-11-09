@@ -234,7 +234,6 @@
     "max-statements": 0,
     "no-bitwise": 1,
     "no-plusplus": 0,
-    "react/display-name": 1,
     "react/jsx-boolean-value": [
       1,
       "always"

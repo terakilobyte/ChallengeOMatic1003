@@ -16,22 +16,23 @@ export default class SelectChallenge extends Component {
     let data = this.props.data.challenges.map((challenge) => {
       return (
         <ListItem
-          key = {challenge.id}
           data-challengid = {challenge.id}
-          primaryText={challenge.title}
+          key = {challenge.id}
+          primaryText = {challenge.title}
           onClick = {this.handleClick.bind(this, challenge.id)}
         />
-      )
+      );
     });
 
     return (
       <List>
         {data}
       </List>
-    )
+    );
   }
 }
 
 SelectChallenge.propTypes = {
-  challengeClick: React.PropTypes.func
+  challengeClick: React.PropTypes.func,
+  data: React.PropTypes.object
 };

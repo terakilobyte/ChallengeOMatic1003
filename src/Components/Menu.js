@@ -19,47 +19,57 @@ const styles = {
 };
 
 export default class Menu extends Component {
-  constructor ( props ){
-    super (props);
-    this.state = {'activeTab': "", 'tabChange': function(to){
-      this.props.action((arguments[1].split(/\=1\$/gi)[1]).replace(/\=01/gi, "."));
-      this.setState({'activeTab': (arguments[1].split(/\=1\$/gi)[1]).replace(/\=01/gi, ".")});
-    }}
+
+  constructor(props) {
+    super(props);
+    this.state = {'activeTab': '', 'tabChange': function() {
+      this.props.action((arguments[1].split(/\=1\$/gi)[1])
+        .replace(/\=01/gi, '.'));
+      this.setState({'activeTab': (arguments[1]
+        .split(/\=1\$/gi)[1]).replace(/\=01/gi, '.')});
+    }};
   }
+
   render() {
-    let MenuElements = this.props.elements.map(function (elem, ix) {
+    let MenuElements = this.props.elements.map((elem, ix) => {
       let potentialInput;
-      let style;
       if (elem.name === 'Choose File') {
-        potentialInput = <input type = 'file' style={styles.fileInput} multiple></input>
+        potentialInput = (
+          <input
+            type = 'file' multiple
+            style={styles.fileInput}>
+          </input>
+        );
       }
+
       return (
-        <span style={styles.buttonStyle} key={ix}>
-        <RaisedButton key= {elem.name}
-                      onClick = {elem.action}
-                      onChange = {elem.handleChange}
+        <span key = { ix }
+              style = {styles.buttonStyle}>
+        <RaisedButton key = {elem.name}
                       label = { elem.name }
+                      onChange = {elem.handleChange}
+                      onClick = {elem.action}
         >
           {potentialInput}
         </RaisedButton>
         </span>
-      )
+      );
     });
 
-    let fileNames= [];
+    let fileNames = [];
     let FileElements = [];
-    for(var i in this.props.files) {
+    for (var i in this.props.files) {
       let file = this.props.files[i];
       fileNames.push(i);
-      FileElements.push (
-        <Tab key= {i}
-             onClick = {this.state.tabChange.bind(this)}
+      FileElements.push(
+        <Tab key= { i }
              label = { i }
+             onClick = {this.state.tabChange.bind(this)}
              value = { i }
         >
           {file.name}
         </Tab>
-      )
+      );
     }
 
     return (
@@ -67,7 +77,10 @@ export default class Menu extends Component {
         <ul>
           {MenuElements}
         </ul>
-        <Tabs onActive = { this.props.action } valueLink={{value: this.state.activeTab, requestChange: function(){console.log('tab changes');}}}>
+        <Tabs onActive = { this.props.action }
+              valueLink={{value: this.state.activeTab,
+                requestChange: function() {console.log('tab changes');}}
+              }>
           {FileElements}
         </Tabs>
       </div>
@@ -76,5 +89,7 @@ export default class Menu extends Component {
 }
 
 Menu.propTypes = {
-  elements: React.PropTypes.array
+  action: React.PropTypes.func,
+  elements: React.PropTypes.array,
+  files: React.PropTypes.object
 };

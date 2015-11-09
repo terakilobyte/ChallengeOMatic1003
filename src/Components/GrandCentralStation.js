@@ -5,15 +5,13 @@ import ChallengeEdit from './ChallengeEdit';
 import SelectChallenge from './SelectChallenge';
 import Editor from './Editor';
 
-var fileStore;
-
 export default class GrandCentralStation extends Component {
   constructor(props) {
-    super (props);
+    super(props);
     this.state = {
       'view': 'ChallengeSelect',
       'fileStore': {},
-      'activeFile': "",
+      'activeFile': '',
       'activeChallenge': {}
     };
     this.backView = this.backView.bind(this);
@@ -29,7 +27,7 @@ export default class GrandCentralStation extends Component {
   }
 
   saveFiles() {
-    //this.setState({'view': 'ChallengeEdit'});
+    // this.setState({'view': 'ChallengeEdit'});
     console.log(2);
   }
 
@@ -45,30 +43,33 @@ export default class GrandCentralStation extends Component {
 
   handleFileIsSelected(event) {
     let files = event.target.files;
-    for(let i in files){
-      let file = files[i];
-      let reader = new FileReader();
+    for (let i in files) {
+      if (files.hasOwnProperty(i)) {
+        let file = files[i];
+        let reader = new FileReader();
 
-      reader.onload = function(upload) {
-        let newFileStoreObject = this.state.fileStore;
-        newFileStoreObject[file.name] = JSON.parse(upload.target.result);
+        reader.onload = function (upload) {
+          let newFileStoreObject = this.state.fileStore;
+          newFileStoreObject[file.name] = JSON.parse(upload.target.result);
 
-        this.setState({
-          'fileStore': newFileStoreObject,
-          'activeFile': file.name,
-          'activeChallenge': {}
-        });
-      }.bind(this);
-      reader.readAsText(file);
+          this.setState({
+            'fileStore': newFileStoreObject,
+            'activeFile': file.name,
+            'activeChallenge': {}
+          });
+        }.bind(this);
+        reader.readAsText(file);
+      }
     }
   }
 
   handleChallengeClick(id) {
     this.setState({
       'activeChallenge':
-        this.state.fileStore[this.state.activeFile].challenges.filter((challenge) => {
-          return challenge.id === id;
-      }).pop(), 'view': 'ChallengeEdit'
+        this.state.fileStore[this.state.activeFile]
+          .challenges.filter((challenge) => {
+            return challenge.id === id;
+          }).pop(), 'view': 'ChallengeEdit'
     });
   }
 
@@ -76,7 +77,7 @@ export default class GrandCentralStation extends Component {
     let componentToRender = <ChallengeSelect />;
     let elements = [];
     let selectChallenges;
-    if(this.state.view === 'ChallengeSelect'){
+    if (this.state.view === 'ChallengeSelect') {
       elements = [
         {
           name: 'Save',
@@ -93,8 +94,7 @@ export default class GrandCentralStation extends Component {
         }
       ];
       componentToRender = <ChallengeSelect />;
-    }
-    else {
+    } else {
       elements = [
         {
           name: 'Back',
@@ -119,9 +119,13 @@ export default class GrandCentralStation extends Component {
         />;
     }
 
-    let menu = <Menu elements = {elements} files = {this.state.fileStore} action = {this.handleFileSelect} />;
+    let menu =
+      <Menu action = {this.handleFileSelect}
+            elements = {elements}
+            files = {this.state.fileStore} />;
 
-    if (Object.keys(this.state.view === "ChallengeEdit" && this.state.activeChallenge).length) {
+    if (Object.keys(this.state.view === 'ChallengeEdit' &&
+        this.state.activeChallenge).length) {
       return (
         <div className = 'app'>
           {menu}
