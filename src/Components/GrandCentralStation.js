@@ -48,7 +48,7 @@ export default class GrandCentralStation extends Component {
         let file = files[i];
         let reader = new FileReader();
 
-        reader.onload = function (upload) {
+        reader.onload = function(upload) {
           let newFileStoreObject = this.state.fileStore;
           newFileStoreObject[file.name] = JSON.parse(upload.target.result);
 
