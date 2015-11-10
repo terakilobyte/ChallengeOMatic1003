@@ -11,6 +11,7 @@ export default class GrandCentralStation extends Component {
     this.state = {
       'view': 'ChallengeSelect',
       'fileStore': {},
+      'fileStoreInstance': {},
       'activeFile': '',
       'activeChallenge': {}
     };
@@ -28,6 +29,13 @@ export default class GrandCentralStation extends Component {
 
   saveFiles() {
     // this.setState({'view': 'ChallengeEdit'});
+    
+    //This is still under construction!!! At the moment it'll only save to the first file :p 
+    
+    var mutatedInstance = this.state.fileStoreInstance;
+    mutatedInstance[this.state.activeFile].challenges[0].title = this.state.fileStoreInstance[this.state.activeFile].challenges[0].title + "tset";
+    
+    this.setState({fileStore: mutatedInstance});
     console.log(2);
   }
 
@@ -50,10 +58,13 @@ export default class GrandCentralStation extends Component {
 
         reader.onload = function(upload) {
           let newFileStoreObject = this.state.fileStore;
+          let newFileStoreInstanceObject = this.state.fileStoreInstance;
           newFileStoreObject[file.name] = JSON.parse(upload.target.result);
-
+          newFileStoreInstanceObject[file.name] = JSON.parse(upload.target.result);
+          
           this.setState({
             'fileStore': newFileStoreObject,
+            'fileStoreInstance': newFileStoreInstanceObject,
             'activeFile': file.name,
             'activeChallenge': {}
           });
@@ -74,6 +85,8 @@ export default class GrandCentralStation extends Component {
   }
 
   render() {
+    console.log(this.state.fileStore);
+    console.log(this.state.fileStoreInstance);
     let componentToRender = <ChallengeSelect />;
     let elements = [];
     let selectChallenges;
