@@ -43,8 +43,7 @@ export default class Editor extends Component {
 
     this.state = {
       codeMirrorData: codeMirrorData,
-      unrenderedCodeMirrors: unrenderedCodeMirrors,
-      codeMirrors: []
+      unrenderedCodeMirrors: unrenderedCodeMirrors
     };
   }
 
@@ -64,11 +63,6 @@ export default class Editor extends Component {
       });
       codeMirrors.push(editor);
     });
-    this.setState({codeMirrors: codeMirrors});
-  }
-
-  test(){
-    console.log('this is a test');
   }
 
   render() {

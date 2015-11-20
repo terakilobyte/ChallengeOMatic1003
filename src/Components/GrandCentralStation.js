@@ -27,22 +27,24 @@ export default class GrandCentralStation extends Component {
     this.setState({'view': 'ChallengeSelect'});
   }
 
-  saveFiles(newInstance) {
-
-    /*let dump = this.state.fileStore;
-    let self = this;
-
-    for (var i in this.state.fileStore[this.state.activeFile].challenges){
-      var challenge = this.state.fileStore[this.state.activeFile].challenges[i];
-      if(challenge.title === self.state.activeChallenge.title){
-        break;
-      }
-    }
-
-    this.state.fileStore[this.state.activeFile].challenges[i] = newInstance;
-
-    this.setState({fileStore: dump});*/
-  }
+  //saveFiles(newInstance) {
+  //
+  //  alert('save');
+  //
+  //  /*let dump = this.state.fileStore;
+  //  let self = this;
+  //
+  //  for (var i in this.state.fileStore[this.state.activeFile].challenges){
+  //    var challenge = this.state.fileStore[this.state.activeFile].challenges[i];
+  //    if(challenge.title === self.state.activeChallenge.title){
+  //      break;
+  //    }
+  //  }
+  //
+  //  this.state.fileStore[this.state.activeFile].challenges[i] = newInstance;
+  //
+  //  this.setState({fileStore: dump});*/
+  //}
 
   exportFiles() {
     console.log(3);
