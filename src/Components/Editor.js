@@ -1,15 +1,85 @@
+import './../../node_modules/codemirror/lib/codemirror.css';
+import './../../node_modules/codemirror/theme/dracula.css';
+import './../../node_modules/codemirror/addon/scroll/simplescrollbars.css';
 import React, {Component} from 'react';
-
-// unfinished editor view!! warning!!
-// see something, say something. Report wild components to responsible
-// authorities immediately. Visit gitter.im/freecodecamp
+import CodeMirror from './../../node_modules/codemirror/lib/codemirror';
+import './../../node_modules/codemirror/mode/javascript/javascript';
+import './../../node_modules/codemirror/addon/edit/closebrackets';
+import './../../node_modules/codemirror/addon/edit/matchbrackets';
+import './../../node_modules/codemirror/addon/scroll/simplescrollbars';
+import './../../node_modules/codemirror/addon/scroll/annotatescrollbar';
+import './../../node_modules/codemirror/addon/scroll/scrollpastend';
+import './../../node_modules/codemirror/addon/lint/lint';
 
 export default class Editor extends Component {
+
+  constructor(props){
+    super (props);
+
+    var codeMirrorData = [];
+
+    var unrenderedCodeMirrors = [];
+
+    for ( var i in this.props.challenge ){
+      var challengeDataField = this.props.challenge[i];
+      codeMirrorData.push([i, challengeDataField]);
+    }
+
+    codeMirrorData = codeMirrorData.filter(function(field){
+      return(field[0] !== 'id');
+    });
+
+    unrenderedCodeMirrors = codeMirrorData.map(function(data){
+      if(Array.isArray(data[1])){
+        data[1] = data[1].join('\n')
+      }
+      return(
+        <div key = {data[0]}>
+          <h3>{data[0]}</h3>
+          <textarea id = {data[0]}>{data[1]}</textarea>
+        </div>
+      );
+    });
+
+    this.state = {
+      codeMirrorData: codeMirrorData,
+      unrenderedCodeMirrors: unrenderedCodeMirrors,
+      codeMirrors: []
+    };
+  }
+
+  componentDidMount(){
+    let codeMirrors = [];
+    this.state.codeMirrorData.map(function(codeMirror){
+      let editor = CodeMirror.fromTextArea(document.getElementById(codeMirror[0]), {
+        lineNumbers: true,
+        mode: 'javascript',
+        theme: 'dracula',
+        runnable: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        scrollbarStyle: 'simple',
+        lineWrapping: true,
+        gutters: ['CodeMirror-lint-markers']
+      });
+      codeMirrors.push(editor);
+    });
+    this.setState({codeMirrors: codeMirrors});
+  }
+
+  test(){
+    console.log('this is a test');
+  }
+
   render() {
+    //this.props.save({});
+
+    //console.log(this.props.challenge);
+
     return (
-      <p>
-        {JSON.stringify(this.props.challenge)}
-      </p>
+      <div>
+        {this.state.unrenderedCodeMirrors}
+      </div>
     );
   }
 }
