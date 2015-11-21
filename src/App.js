@@ -4,7 +4,7 @@ import GrandCentralStation from './Components/GrandCentralStation';
 export default class App extends Component {
   render() {
     return (
-        <GrandCentralStation />
+      <GrandCentralStation />
     );
   }
 }

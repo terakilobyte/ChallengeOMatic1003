@@ -6,6 +6,8 @@ import React, {Component} from 'react';
 
 import {updateChallenge} from './editorActionsCreator';
 
+import {connect} from 'react-redux';
+
 import CodeMirror from './../../node_modules/codemirror/lib/codemirror';
 import './../../node_modules/codemirror/mode/javascript/javascript';
 import './../../node_modules/codemirror/addon/edit/closebrackets';
@@ -14,6 +16,10 @@ import './../../node_modules/codemirror/addon/scroll/simplescrollbars';
 import './../../node_modules/codemirror/addon/scroll/annotatescrollbar';
 import './../../node_modules/codemirror/addon/scroll/scrollpastend';
 import './../../node_modules/codemirror/addon/lint/lint';
+
+const connector = connect(function(state){
+
+});
 
 export default class Editor extends Component {
 
@@ -65,19 +71,19 @@ export default class Editor extends Component {
         lineWrapping: true,
         gutters: ['CodeMirror-lint-markers']
       });
-      
+
       editor.on('change', function(instance, changeObj){
         updateChallenge(
           {
             id: challenge.id,
             props: {
-              codeMirror[0]: changeObj.text
+              [codeMirror[0]]: changeObj.text
             }
-            
+
           }
         );
-      })
-      
+      });
+
       codeMirrors.push(editor);
     });
   }

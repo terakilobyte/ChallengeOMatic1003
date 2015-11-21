@@ -16,7 +16,7 @@ export default class GrandCentralStation extends Component {
       'activeChallenge': {}
     };
     this.backView = this.backView.bind(this);
-    this.saveFiles = this.saveFiles.bind(this);
+    //this.saveFiles = this.saveFiles.bind(this);
     this.exportFiles = this.exportFiles.bind(this);
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.handleFileIsSelected = this.handleFileIsSelected.bind(this);
