@@ -1,12 +1,22 @@
-import './../style.css';
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {loadChallenge} from './editorActionsCreator';
+
 import Menu from './Menu';
 import ChallengeSelect from './ChallengeSelect';
 import ChallengeEdit from './ChallengeEdit';
 import SelectChallenge from './SelectChallenge';
 import Editor from './Editor';
 
-export default class GrandCentralStation extends Component {
+import './../style.css';
+
+const connector = connect(function(state, props){
+  return(
+    {}
+  );
+});
+
+class GrandCentralStation extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +26,6 @@ export default class GrandCentralStation extends Component {
       'activeChallenge': {}
     };
     this.backView = this.backView.bind(this);
-    //this.saveFiles = this.saveFiles.bind(this);
     this.exportFiles = this.exportFiles.bind(this);
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.handleFileIsSelected = this.handleFileIsSelected.bind(this);
@@ -64,13 +73,18 @@ export default class GrandCentralStation extends Component {
         let reader = new FileReader();
 
         reader.onload = function(upload) {
+
           let newFileStoreObject = this.state.fileStore;
           newFileStoreObject[file.name] = JSON.parse(upload.target.result);
+
+          loadChallenge (this.props.dispatch, {
+            challenges: newFileStoreObject[file.name].challenges
+          });
           
           this.setState({
-            'fileStore': newFileStoreObject,
-            'activeFile': file.name,
-            'activeChallenge': {}
+            fileStore: newFileStoreObject,
+            activeFile: file.name,
+            activeChallenge: {}
           });
         }.bind(this);
         reader.readAsText(file);
@@ -161,3 +175,4 @@ export default class GrandCentralStation extends Component {
   }
 }
 
+export default connector(GrandCentralStation);

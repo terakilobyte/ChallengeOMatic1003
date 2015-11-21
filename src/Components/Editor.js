@@ -19,14 +19,14 @@ import './../../node_modules/codemirror/addon/lint/lint';
 
 const connector = connect(function(state, props){
   //State from redux
-  return(state.challenges.reduce(function(prevC, challenge){
+  return ({challenge: state.challenges.reduce(function(prevC, challenge){
     if(challenge.id === props.id) {
       return(challenge)
     }
     else {
       return(prevC);
     }
-  }, {}));
+  }, {})});
 });
 
 class Editor extends Component {
@@ -34,22 +34,24 @@ class Editor extends Component {
   constructor(props){
     super (props);
 
-    /*var codeMirrorData = [];
+    console.log(props);
 
-     var unrenderedCodeMirrors = [];
+    var codeMirrorData = [];
 
-     for ( var i in this.props.challenge ){
-     var challengeDataField = this.props.challenge[i];
-     codeMirrorData.push([i, challengeDataField]);
-     }
+    var unrenderedCodeMirrors = [];
 
-     codeMirrorData = codeMirrorData.filter(function(field){
-     return(field[0] !== 'id');
-     });
+    for ( var i in this.props.challenge ){
+      var challengeDataField = this.props.challenge[i];
+      codeMirrorData.push([i, challengeDataField]);
+    }
 
-     unrenderedCodeMirrors = codeMirrorData.map(function(data){
-     if(Array.isArray(data[1])){
-     data[1] = data[1].join('\n')
+    codeMirrorData = codeMirrorData.filter(function(field){
+      return(field[0] !== 'id');
+    });
+
+    unrenderedCodeMirrors = codeMirrorData.map(function(data){
+      if(Array.isArray(data[1])){
+        data[1] = data[1].join('\n')
      }
      return(
      <div key = {data[0]}>
@@ -60,13 +62,13 @@ class Editor extends Component {
      });
 
      this.state = {
-     codeMirrorData: codeMirrorData,
-     unrenderedCodeMirrors: unrenderedCodeMirrors
-     };*/
+       codeMirrorData: codeMirrorData,
+       unrenderedCodeMirrors: unrenderedCodeMirrors
+     };
   }
 
   componentDidMount(){
-    /*let codeMirrors = [];
+    let codeMirrors = [];
     this.state.codeMirrorData.map(function(codeMirror){
       let editor = CodeMirror.fromTextArea(document.getElementById(codeMirror[0]), {
         lineNumbers: true,
@@ -93,7 +95,7 @@ class Editor extends Component {
       });
 
       codeMirrors.push(editor);
-    });*/
+    });
   }
 
   render() {
@@ -104,6 +106,7 @@ class Editor extends Component {
 
     return (
       <div>
+        {this.state.unrenderedCodeMirrors}
       </div>
     );
   }

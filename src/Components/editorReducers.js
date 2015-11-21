@@ -23,10 +23,10 @@ export default function (prevState = initialState, action) {
       return(Object.assign({}, prevState, {challenges: challenges}));
 
       break;
-    case 'save':
-
+    case 'loadChallenge':
+      return(Object.assign({}, prevState, action.payload));
       break;
-    case 'load':
+    case 'save':
 
       break;
     case 'create':
