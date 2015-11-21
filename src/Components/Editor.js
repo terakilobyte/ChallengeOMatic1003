@@ -27,7 +27,6 @@ const connector = connect(function(state, props){
       return(prevC);
     }
   }, {}));
-
 });
 
 class Editor extends Component {

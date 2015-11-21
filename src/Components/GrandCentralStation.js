@@ -145,7 +145,7 @@ export default class GrandCentralStation extends Component {
       return (
         <div className = 'app'>
           {menu}
-          <Editor save = {this.saveFiles} id={this.state.activeChallenge.id} />
+          <Editor id={this.state.activeChallenge.id} />
         </div>
       );
     } else {
