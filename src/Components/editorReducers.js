@@ -1,16 +1,16 @@
 const initialState = {
   challenges: [
 
-  ]
+  ],
+  'fileStore': {},
+  'activeFile': '',
+  'activeChallenge': {},
+  'view': 'ChallengeSelect'
 };
 
 export default function (prevState = initialState, action) {
   switch (action.type) {
     case 'updateChallenge':
-      //action.payload
-      //action.payload.id
-      //action.payload.props
-
       let challenges = prevState.challenges.slice();
 
       challenges = challenges.map(function(challenge){
@@ -26,7 +26,7 @@ export default function (prevState = initialState, action) {
     case 'loadChallenge':
       return(Object.assign({}, prevState, action.payload));
       break;
-    case 'save':
+    case 'saveChallenge':
 
       break;
     case 'create':

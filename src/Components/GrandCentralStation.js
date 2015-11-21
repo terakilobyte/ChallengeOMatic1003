@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {loadChallenge} from './editorActionsCreator';
 
+import $ from 'jquery';
+
 import Menu from './Menu';
 import ChallengeSelect from './ChallengeSelect';
 import ChallengeEdit from './ChallengeEdit';
@@ -12,19 +14,13 @@ import './../style.css';
 
 const connector = connect(function(state, props){
   return(
-    {}
+    props
   );
 });
 
 class GrandCentralStation extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      'view': 'ChallengeSelect',
-      'fileStore': {},
-      'activeFile': '',
-      'activeChallenge': {}
-    };
     this.backView = this.backView.bind(this);
     this.exportFiles = this.exportFiles.bind(this);
     this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -33,7 +29,7 @@ class GrandCentralStation extends Component {
   }
 
   backView() {
-    this.setState({'view': 'ChallengeSelect'});
+    //this.setState({'view': 'ChallengeSelect'});
   }
 
   //saveFiles(newInstance) {
@@ -56,13 +52,19 @@ class GrandCentralStation extends Component {
   //}
 
   exportFiles() {
+
+    console.log(this.state);
+
+    //let dump = this.state.fileStore
+
     console.log(3);
   }
 
   handleFileSelect(to) {
+    /*console.log(to);
     this.setState({
       'activeFile': to
-    });
+    });*/
   }
 
   handleFileIsSelected(event) {
@@ -71,21 +73,20 @@ class GrandCentralStation extends Component {
       if (files.hasOwnProperty(i)) {
         let file = files[i];
         let reader = new FileReader();
+        let dispatch = this.props.dispatch;
 
         reader.onload = function(upload) {
-
           let newFileStoreObject = this.state.fileStore;
-          newFileStoreObject[file.name] = JSON.parse(upload.target.result);
+          newFileStoreObject[file.name] =
+            JSON.parse(upload.target.result);
 
-          loadChallenge (this.props.dispatch, {
-            challenges: newFileStoreObject[file.name].challenges
-          });
-          
-          this.setState({
+          loadChallenge (dispatch, {
             fileStore: newFileStoreObject,
             activeFile: file.name,
+            challenges: newFileStoreObject[file.name].challenges,
             activeChallenge: {}
           });
+          this.setState({view: 'challengeSelect'});
         }.bind(this);
         reader.readAsText(file);
       }
@@ -106,19 +107,15 @@ class GrandCentralStation extends Component {
     let componentToRender = <ChallengeSelect />;
     let elements = [];
     let selectChallenges;
-    if (this.state.view === 'ChallengeSelect') {
+    console.log(this.state);
+    if (this.state !== null && this.state.view === 'ChallengeSelect') {
       elements = [
-        {
-          name: 'Save',
-          action: this.saveFiles
-        },
         {
           name: 'Export',
           action: this.exportFiles
         },
         {
           name: 'Choose File',
-          action: this.handleFileSelect,
           handleChange: this.handleFileIsSelected
         }
       ];
@@ -130,10 +127,6 @@ class GrandCentralStation extends Component {
           action: this.backView
         },
         {
-          name: 'Save',
-          action: this.saveFiles
-        },
-        {
           name: 'Export',
           action: this.exportFiles
         }
@@ -141,7 +134,8 @@ class GrandCentralStation extends Component {
       componentToRender = <ChallengeEdit />;
     }
 
-    if (Object.keys(this.state.fileStore).length) {
+    if (this.state !== null && this.state.fileStore && Object.keys(this.state.fileStore).length) {
+      console.log(this.state.activeFile);
       selectChallenges = <SelectChallenge
         data = {this.state.fileStore[this.state.activeFile]}
         challengeClick = {this.handleChallengeClick}

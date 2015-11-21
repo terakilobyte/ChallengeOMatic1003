@@ -69,6 +69,9 @@ class Editor extends Component {
 
   componentDidMount(){
     let codeMirrors = [];
+    const dispatch = this.props.dispatch;
+    const challengeId = this.props.challenge.id;
+
     this.state.codeMirrorData.map(function(codeMirror){
       let editor = CodeMirror.fromTextArea(document.getElementById(codeMirror[0]), {
         lineNumbers: true,
@@ -83,11 +86,15 @@ class Editor extends Component {
       });
 
       editor.on('change', function(instance, changeObj){
-        updateChallenge(
+
+        console.log('i', instance);
+        console.log('c', changeObj);
+
+        updateChallenge(dispatch,
           {
-            id: challenge.id,
+            id: challengeId,
             props: {
-              [codeMirror[0]]: changeObj.text
+              [codeMirror[0]]: instance.getValue()
             }
 
           }
