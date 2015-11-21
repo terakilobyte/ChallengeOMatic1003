@@ -86,7 +86,7 @@ export default class GrandCentralStation extends Component {
             return challenge.id === id;
           }).pop(), 'view': 'ChallengeEdit'
     });
-}
+  }
 
   render() {
     let componentToRender = <ChallengeSelect />;

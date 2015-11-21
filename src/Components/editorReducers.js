@@ -4,7 +4,7 @@ const initialState = {
   ]
 };
 
-export default function (prevState, action) {
+export default function (prevState = initialState, action) {
   switch (action.type) {
     case 'updateChallenge':
       //action.payload
