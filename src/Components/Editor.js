@@ -17,48 +17,57 @@ import './../../node_modules/codemirror/addon/scroll/annotatescrollbar';
 import './../../node_modules/codemirror/addon/scroll/scrollpastend';
 import './../../node_modules/codemirror/addon/lint/lint';
 
-const connector = connect(function(state){
+const connector = connect(function(state, props){
+  //State from redux
+  return(state.challenges.reduce(function(prevC, challenge){
+    if(challenge.id === props.id) {
+      return(challenge)
+    }
+    else {
+      return(prevC);
+    }
+  }, {}));
 
 });
 
-export default class Editor extends Component {
+class Editor extends Component {
 
   constructor(props){
     super (props);
 
-    var codeMirrorData = [];
+    /*var codeMirrorData = [];
 
-    var unrenderedCodeMirrors = [];
+     var unrenderedCodeMirrors = [];
 
-    for ( var i in this.props.challenge ){
-      var challengeDataField = this.props.challenge[i];
-      codeMirrorData.push([i, challengeDataField]);
-    }
+     for ( var i in this.props.challenge ){
+     var challengeDataField = this.props.challenge[i];
+     codeMirrorData.push([i, challengeDataField]);
+     }
 
-    codeMirrorData = codeMirrorData.filter(function(field){
-      return(field[0] !== 'id');
-    });
+     codeMirrorData = codeMirrorData.filter(function(field){
+     return(field[0] !== 'id');
+     });
 
-    unrenderedCodeMirrors = codeMirrorData.map(function(data){
-      if(Array.isArray(data[1])){
-        data[1] = data[1].join('\n')
-      }
-      return(
-        <div key = {data[0]}>
-          <h3>{data[0]}</h3>
-          <textarea id = {data[0]}>{data[1]}</textarea>
-        </div>
-      );
-    });
+     unrenderedCodeMirrors = codeMirrorData.map(function(data){
+     if(Array.isArray(data[1])){
+     data[1] = data[1].join('\n')
+     }
+     return(
+     <div key = {data[0]}>
+     <h3>{data[0]}</h3>
+     <textarea id = {data[0]}>{data[1]}</textarea>
+     </div>
+     );
+     });
 
-    this.state = {
-      codeMirrorData: codeMirrorData,
-      unrenderedCodeMirrors: unrenderedCodeMirrors
-    };
+     this.state = {
+     codeMirrorData: codeMirrorData,
+     unrenderedCodeMirrors: unrenderedCodeMirrors
+     };*/
   }
 
   componentDidMount(){
-    let codeMirrors = [];
+    /*let codeMirrors = [];
     this.state.codeMirrorData.map(function(codeMirror){
       let editor = CodeMirror.fromTextArea(document.getElementById(codeMirror[0]), {
         lineNumbers: true,
@@ -85,17 +94,17 @@ export default class Editor extends Component {
       });
 
       codeMirrors.push(editor);
-    });
+    });*/
   }
 
   render() {
     //this.props.save({});
 
     //console.log(this.props.challenge);
+    /*{this.state.unrenderedCodeMirrors}*/
 
     return (
       <div>
-        {this.state.unrenderedCodeMirrors}
       </div>
     );
   }
@@ -104,3 +113,6 @@ export default class Editor extends Component {
 Editor.propTypes = {
   challenge: React.PropTypes.object
 };
+
+
+export default connector(Editor);
