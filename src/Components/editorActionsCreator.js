@@ -5,6 +5,13 @@ export function updateChallenge(dispatch, payload) {
   });
 }
 
+export function loadFile(dispatch, payload) {
+  dispatch ({
+    type: 'loadFile',
+    payload
+  });
+}
+
 export function loadChallenge(dispatch, payload) {
   dispatch ({
     type: 'loadChallenge',

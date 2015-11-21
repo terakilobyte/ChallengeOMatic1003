@@ -1,7 +1,4 @@
 const initialState = {
-  challenges: [
-
-  ],
   'fileStore': {},
   'activeFile': '',
   'activeChallenge': {},
@@ -20,10 +17,21 @@ export default function (prevState = initialState, action) {
         return(challenge);
       });
 
-      return(Object.assign({}, prevState, {challenges: challenges}));
+      let fileStore = prevState.fileStore;
+
+      let newFileStore = fileStore[prevState.activeFile];
+
+      newFileStore.challenges = challenges;
+
+      fileStore[prevState.activeFile] = newFileStore;
+
+      return(Object.assign({}, prevState, fileStore));
 
       break;
     case 'loadChallenge':
+      return(Object.assign({}, prevState, action.payload));
+      break;
+    case 'loadFile':
       return(Object.assign({}, prevState, action.payload));
       break;
     case 'saveChallenge':

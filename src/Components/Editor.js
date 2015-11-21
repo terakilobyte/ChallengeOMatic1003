@@ -34,8 +34,6 @@ class Editor extends Component {
   constructor(props){
     super (props);
 
-    console.log(props);
-
     var codeMirrorData = [];
 
     var unrenderedCodeMirrors = [];
@@ -55,16 +53,16 @@ class Editor extends Component {
      }
      return(
      <div key = {data[0]}>
-     <h3>{data[0]}</h3>
-     <textarea id = {data[0]}>{data[1]}</textarea>
+       <h3>{data[0]}</h3>
+       <textarea id = {data[0]}>{data[1]}</textarea>
      </div>
      );
      });
 
-     this.state = {
-       codeMirrorData: codeMirrorData,
-       unrenderedCodeMirrors: unrenderedCodeMirrors
-     };
+    this.state = {
+      codeMirrorData: codeMirrorData,
+      unrenderedCodeMirrors: unrenderedCodeMirrors
+    };
   }
 
   componentDidMount(){
@@ -87,14 +85,11 @@ class Editor extends Component {
 
       editor.on('change', function(instance, changeObj){
 
-        console.log('i', instance);
-        console.log('c', changeObj);
-
         updateChallenge(dispatch,
           {
             id: challengeId,
             props: {
-              [codeMirror[0]]: instance.getValue()
+              [codeMirror[0]]: instance.getValue() + changeObj.text
             }
 
           }

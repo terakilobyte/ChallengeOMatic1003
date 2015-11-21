@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import store from './../store';
+import {loadFile} from './editorActionsCreator';
 import {loadChallenge} from './editorActionsCreator';
 
 import $ from 'jquery';
@@ -14,7 +16,7 @@ import './../style.css';
 
 const connector = connect(function(state, props){
   return(
-    props
+    state
   );
 });
 
@@ -53,8 +55,6 @@ class GrandCentralStation extends Component {
 
   exportFiles() {
 
-    console.log(this.state);
-
     //let dump = this.state.fileStore
 
     console.log(3);
@@ -76,11 +76,11 @@ class GrandCentralStation extends Component {
         let dispatch = this.props.dispatch;
 
         reader.onload = function(upload) {
-          let newFileStoreObject = this.state.fileStore;
+          let newFileStoreObject = this.props.fileStore;
           newFileStoreObject[file.name] =
             JSON.parse(upload.target.result);
 
-          loadChallenge (dispatch, {
+          loadFile (dispatch, {
             fileStore: newFileStoreObject,
             activeFile: file.name,
             challenges: newFileStoreObject[file.name].challenges,
@@ -94,9 +94,10 @@ class GrandCentralStation extends Component {
   }
 
   handleChallengeClick(id) {
-    this.setState({
+    let dispatch = this.props.dispatch;
+    loadChallenge(dispatch, {
       'activeChallenge':
-        this.state.fileStore[this.state.activeFile]
+        this.props.fileStore[this.props.activeFile]
           .challenges.filter((challenge) => {
             return challenge.id === id;
           }).pop(), 'view': 'ChallengeEdit'
@@ -107,13 +108,8 @@ class GrandCentralStation extends Component {
     let componentToRender = <ChallengeSelect />;
     let elements = [];
     let selectChallenges;
-    console.log(this.state);
-    if (this.state !== null && this.state.view === 'ChallengeSelect') {
+    if (this.props !== null && this.props.view === 'ChallengeSelect') {
       elements = [
-        {
-          name: 'Export',
-          action: this.exportFiles
-        },
         {
           name: 'Choose File',
           handleChange: this.handleFileIsSelected
@@ -134,10 +130,9 @@ class GrandCentralStation extends Component {
       componentToRender = <ChallengeEdit />;
     }
 
-    if (this.state !== null && this.state.fileStore && Object.keys(this.state.fileStore).length) {
-      console.log(this.state.activeFile);
+    if (this.props !== null && this.props.fileStore && Object.keys(this.props.fileStore).length) {
       selectChallenges = <SelectChallenge
-        data = {this.state.fileStore[this.state.activeFile]}
+        data = {this.props.fileStore[this.props.activeFile]}
         challengeClick = {this.handleChallengeClick}
         />;
     }
@@ -145,15 +140,15 @@ class GrandCentralStation extends Component {
     let menu =
       <Menu action = {this.handleFileSelect}
             elements = {elements}
-            files = {this.state.fileStore} />;
+            files = {this.props.fileStore} />;
 
 
-    if (Object.keys(this.state.view === 'ChallengeEdit' &&
-        this.state.activeChallenge).length) {
+    if (Object.keys(this.props.view === 'ChallengeEdit' &&
+        this.props.activeChallenge).length) {
       return (
         <div className = 'app'>
           {menu}
-          <Editor id={this.state.activeChallenge.id} />
+          <Editor id={this.props.activeChallenge.id} />
         </div>
       );
     } else {

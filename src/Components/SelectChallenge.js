@@ -13,7 +13,6 @@ export default class SelectChallenge extends Component {
   }
 
   render() {
-    console.log(this.props);
     let data = this.props.data.challenges.map((challenge) => {
       return (
         <ListItem
