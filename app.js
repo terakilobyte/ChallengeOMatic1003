@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var config = require('./config');
 
 var app = express();
 
@@ -11,22 +12,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/export', function(req, res, next){
-  Object.keys(req.body.data).forEach(function(file){
+app.post('/export', function(req, res, next) {
+  Object.keys(req.body.data).forEach(function(file) {
     var fileData = req.body.data[file];
-    fs.writeFile(config.fccPath + "/" + file, fileData, function(err){
-
+    fs.writeFile(config.fccPath + file,
+                 JSON.stringify(fileData, null, 2),
+                 function(err) {
+      console.error(err);
     });
   });
 });
 
-app.get('/*', function(req,res,next){
+app.get('/*', function(req, res, next) {
   res.render('index');
 });
 
