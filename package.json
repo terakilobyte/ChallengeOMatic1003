@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "./node_modules/webpack",
+    "build": "webpack",
     "start": "node ./bin/www"
   },
   "dependencies": {
