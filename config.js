@@ -1,6 +1,8 @@
-var os = require('os');
-var WINDOWS_PATH = 'C:/users/alienware/desktop/test';
-var NIX_PATH = process.env.HOME + '/Desktop/test/';
+var dotenv = require('dotenv');
+dotenv.load();
+
 module.exports = {
-  'fccPath': os.platform() === 'win32' ? WINDOWS_PATH : NIX_PATH
+  'fccPath': process.cwd().substr(0, process.cwd().lastIndexOf('/'))
+    + '/' + process.env.FCC_FOLDER_NAME + '/seed/challenges/'
 };
+
