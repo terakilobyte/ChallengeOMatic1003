@@ -34,8 +34,11 @@ export default function (prevState = initialState, action) {
     case 'loadFile':
       return(Object.assign({}, prevState, action.payload));
       break;
-    case 'saveChallenge':
-
+    case 'fileSelect':
+      return(Object.assign({}, prevState, action.payload));
+      break;
+    case 'backAction':
+      return(Object.assign({}, prevState, action.payload));
       break;
     case 'create':
 

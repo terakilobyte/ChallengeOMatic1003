@@ -1,6 +1,6 @@
-export function updateChallenge(dispatch, payload) {
+export function backAction(dispatch, payload) {
   dispatch ({
-    type: 'updateChallenge',
+    type: 'backAction',
     payload
   });
 }
@@ -19,9 +19,16 @@ export function loadChallenge(dispatch, payload) {
   });
 }
 
-export function saveChallenge(dispatch, payload) {
+export function fileSelect(dispatch, payload) {
   dispatch ({
-    type: 'saveChallenge',
+    type: 'fileSelect',
+    payload
+  });
+}
+
+export function updateChallenge(dispatch, payload) {
+  dispatch ({
+    type: 'updateChallenge',
     payload
   });
 }

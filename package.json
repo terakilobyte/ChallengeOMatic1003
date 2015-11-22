@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build": "./node_modules/webpack",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -12,6 +13,6 @@
     "express": "~4.13.1",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "superagent": "^1.4.0"
   }
 }

@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import store from './../store';
-import {loadFile} from './editorActionsCreator';
-import {loadChallenge} from './editorActionsCreator';
+import {
+  backAction,
+  loadFile,
+  loadChallenge,
+  fileSelect
+} from './editorActionsCreator';
 
 import $ from 'jquery';
 
 import Menu from './Menu';
+import TabBar from './Tabs';
 import ChallengeSelect from './ChallengeSelect';
 import ChallengeEdit from './ChallengeEdit';
 import SelectChallenge from './SelectChallenge';
@@ -31,40 +36,26 @@ class GrandCentralStation extends Component {
   }
 
   backView() {
-    //this.setState({'view': 'ChallengeSelect'});
+    let dispatch = this.props.dispatch;
+    backAction(dispatch, {
+      view: 'challengeSelect'
+    });
   }
 
-  //saveFiles(newInstance) {
-  //
-  //  alert('save');
-  //
-  //  /*let dump = this.state.fileStore;
-  //  let self = this;
-  //
-  //  for (var i in this.state.fileStore[this.state.activeFile].challenges){
-  //    var challenge = this.state.fileStore[this.state.activeFile].challenges[i];
-  //    if(challenge.title === self.state.activeChallenge.title){
-  //      break;
-  //    }
-  //  }
-  //
-  //  this.state.fileStore[this.state.activeFile].challenges[i] = newInstance;
-  //
-  //  this.setState({fileStore: dump});*/
-  //}
-
   exportFiles() {
-
-    //let dump = this.state.fileStore
-
-    console.log(3);
+    $.post('/export', {
+      data: this.props.fileStore,
+      success: function(data){
+        console.log(data);
+      }
+    });
   }
 
   handleFileSelect(to) {
-    /*console.log(to);
-    this.setState({
-      'activeFile': to
-    });*/
+    let dispatch = this.props.dispatch;
+    fileSelect(dispatch, {
+      activeFile: to
+    });
   }
 
   handleFileIsSelected(event) {
@@ -86,7 +77,6 @@ class GrandCentralStation extends Component {
             challenges: newFileStoreObject[file.name].challenges,
             activeChallenge: {}
           });
-          this.setState({view: 'challengeSelect'});
         }.bind(this);
         reader.readAsText(file);
       }
@@ -138,16 +128,19 @@ class GrandCentralStation extends Component {
     }
 
     let menu =
-      <Menu action = {this.handleFileSelect}
-            elements = {elements}
-            files = {this.props.fileStore} />;
+      <Menu elements = {elements} />;
 
+    let tabs;
+
+    tabs = Object.keys(this.props.fileStore).length === 0 ? ''
+      : <TabBar action = {this.handleFileSelect} files = {this.props.fileStore} />;
 
     if (Object.keys(this.props.view === 'ChallengeEdit' &&
         this.props.activeChallenge).length) {
       return (
         <div className = 'app'>
           {menu}
+          {tabs}
           <Editor id={this.props.activeChallenge.id} />
         </div>
       );
@@ -156,6 +149,7 @@ class GrandCentralStation extends Component {
       return (
         <div className = 'app'>
           {menu}
+          {tabs}
           {componentToRender}
           {selectChallenges}
         </div>

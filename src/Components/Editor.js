@@ -54,7 +54,7 @@ class Editor extends Component {
      return(
      <div key = {data[0]}>
        <h3>{data[0]}</h3>
-       <textarea id = {data[0]}>{data[1]}</textarea>
+       <textarea id = {data[0]} defaultValue = {data[1]}></textarea>
      </div>
      );
      });
