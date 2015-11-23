@@ -15,8 +15,8 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '5000mb'}));
+app.use(bodyParser.urlencoded({limit: '5000mb', extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/export', function(req, res, next) {
@@ -34,7 +34,7 @@ app.post('/export', function(req, res, next) {
 app.get('/mongoid', function(req, res, next) {
   var objectId = new ObjectID();
   res.json({objectId: objectId});
-})
+});
 
 app.get('/*', function(req, res, next) {
   res.render('index');
