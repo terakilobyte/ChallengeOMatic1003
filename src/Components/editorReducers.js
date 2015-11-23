@@ -28,6 +28,9 @@ export default function (prevState = initialState, action) {
       return(Object.assign({}, prevState, fileStore));
 
       break;
+    case 'createChallenge':
+      return(Object.assign({}, prevState, action.payload));
+      break;
     case 'loadChallenge':
       return(Object.assign({}, prevState, action.payload));
       break;

@@ -85,13 +85,60 @@ class GrandCentralStation extends Component {
 
   handleChallengeClick(id) {
     let dispatch = this.props.dispatch;
-    loadChallenge(dispatch, {
-      'activeChallenge':
-        this.props.fileStore[this.props.activeFile]
-          .challenges.filter((challenge) => {
-            return challenge.id === id;
-          }).pop(), 'view': 'ChallengeEdit'
-    });
+    if(id === 'new'){
+      $.getJSON('/mongoid', function(mongoid){
+        mongoid = mongoid.objectId
+        
+        let oldFileStore = this.props.fileStore;
+        
+        oldFileStore.challenges.push({
+            "id": mongoid,
+            "title": mongoid,
+            "description": [
+          	  ""
+            ],
+            "tests": [
+          	  ""
+            ],
+            "challengeSeed": [
+              ""
+            ],
+            "MDNlinks": [
+          	  ""
+            ],
+            "solutions": [
+          	  ""
+            ],
+            "type": "",
+            "challengeType": 0,
+            "nameCn": "",
+            "descriptionCn": [],
+            "nameFr": "",
+            "descriptionFr": [],
+            "nameRu": "",
+            "descriptionRu": [],
+            "nameEs": "",
+            "descriptionEs": [],
+            "namePt": "",
+            "descriptionPt": []
+        });
+        
+        AddedChallenge = {fileStore: oldFileStore};
+        
+        createChallenge(dispatch, 
+          AddedChallenge
+        );
+      })
+    }
+    else {
+      loadChallenge(dispatch, {
+        'activeChallenge':
+          this.props.fileStore[this.props.activeFile]
+            .challenges.filter((challenge) => {
+              return challenge.id === id;
+            }).pop(), 'view': 'ChallengeEdit'
+      });
+    }
   }
 
   render() {

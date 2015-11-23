@@ -12,6 +12,13 @@ export function loadFile(dispatch, payload) {
   });
 }
 
+export function createChallenge(dispatch, payload) {
+  dispatch ({
+    type: 'createChallenge',
+    payload
+  });
+}
+
 export function loadChallenge(dispatch, payload) {
   dispatch ({
     type: 'loadChallenge',

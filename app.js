@@ -4,6 +4,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var config = require('./config');
+var ObjectID = require('mongodb').ObjectID;
 
 var app = express();
 
@@ -29,6 +30,11 @@ app.post('/export', function(req, res, next) {
     });
   });
 });
+
+app.get('/mongoid', function(req, res, next) {
+  var objectId = new ObjectID();
+  res.json({objectId: objectId});
+})
 
 app.get('/*', function(req, res, next) {
   res.render('index');
