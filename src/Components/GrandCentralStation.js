@@ -4,6 +4,7 @@ import store from './../store';
 import {
   backAction,
   loadFile,
+  createChallenge,
   loadChallenge,
   fileSelect
 } from './editorActionsCreator';
@@ -12,8 +13,6 @@ import $ from 'jquery';
 
 import Menu from './Menu';
 import TabBar from './Tabs';
-import ChallengeSelect from './ChallengeSelect';
-import ChallengeEdit from './ChallengeEdit';
 import SelectChallenge from './SelectChallenge';
 import Editor from './Editor';
 
@@ -23,7 +22,7 @@ const connector = connect(function(state, props){
   return(
     state
   );
-});
+},null, null, {pure: false});
 
 class GrandCentralStation extends Component {
   constructor(props) {
@@ -53,8 +52,10 @@ class GrandCentralStation extends Component {
 
   handleFileSelect(to) {
     let dispatch = this.props.dispatch;
+    let fileStore = this.props.fileStore;
     fileSelect(dispatch, {
-      activeFile: to
+      activeFile: to,
+      challenges: fileStore[to].challenges
     });
   }
 
@@ -85,13 +86,15 @@ class GrandCentralStation extends Component {
 
   handleChallengeClick(id) {
     let dispatch = this.props.dispatch;
+
+    let oldFileStore = this.props.fileStore;
+    let currentFile = this.props.activeFile;
+
     if(id === 'new'){
       $.getJSON('/mongoid', function(mongoid){
-        mongoid = mongoid.objectId
+        mongoid = mongoid.objectId;
         
-        let oldFileStore = this.props.fileStore;
-        
-        oldFileStore.challenges.push({
+        oldFileStore[currentFile].challenges.push({
             "id": mongoid,
             "title": mongoid,
             "description": [
@@ -123,7 +126,7 @@ class GrandCentralStation extends Component {
             "descriptionPt": []
         });
         
-        AddedChallenge = {fileStore: oldFileStore};
+        let AddedChallenge = {fileStore: oldFileStore};
         
         createChallenge(dispatch, 
           AddedChallenge
@@ -142,7 +145,6 @@ class GrandCentralStation extends Component {
   }
 
   render() {
-    let componentToRender = <ChallengeSelect />;
     let elements = [];
     let selectChallenges;
     if (this.props !== null && this.props.view === 'ChallengeSelect') {
@@ -150,21 +152,27 @@ class GrandCentralStation extends Component {
         {
           name: 'Choose File',
           handleChange: this.handleFileIsSelected
-        }
-      ];
-      componentToRender = <ChallengeSelect />;
-    } else {
-      elements = [
-        {
-          name: 'Back',
-          action: this.backView
         },
         {
           name: 'Export',
           action: this.exportFiles
         }
       ];
-      componentToRender = <ChallengeEdit />;
+    } else {
+      elements = [
+        {
+          name: 'Choose File',
+          handleChange: this.handleFileIsSelected
+        },
+        {
+          name: 'Export',
+          action: this.exportFiles
+        },
+        {
+          name: 'Back',
+          action: this.backView
+        }
+      ];
     }
 
     if (this.props !== null && this.props.fileStore && Object.keys(this.props.fileStore).length) {
@@ -197,7 +205,6 @@ class GrandCentralStation extends Component {
         <div className = 'app'>
           {menu}
           {tabs}
-          {componentToRender}
           {selectChallenges}
         </div>
       );

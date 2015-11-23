@@ -9,7 +9,6 @@ export default function (prevState = initialState, action) {
   switch (action.type) {
     case 'updateChallenge':
       let challenges = prevState.challenges.slice();
-
       challenges = challenges.map(function(challenge){
         if(challenge.id === action.payload.id){
           return(Object.assign({}, challenge, action.payload.props));
@@ -42,9 +41,6 @@ export default function (prevState = initialState, action) {
       break;
     case 'backAction':
       return(Object.assign({}, prevState, action.payload));
-      break;
-    case 'create':
-
       break;
     default:
       return(prevState);

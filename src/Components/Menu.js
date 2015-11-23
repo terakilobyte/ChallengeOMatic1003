@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import store from './../store';
+
 import RaisedButton from 'material-ui/lib/raised-button';
 
 const styles = {
@@ -17,7 +20,13 @@ const styles = {
   }
 };
 
-export default class Menu extends Component {
+const connector = connect(function(state, props){
+  return(
+    state
+  );
+},null, null, {pure: false});
+
+class Menu extends Component {
 
   constructor(props) {
     super(props);
@@ -34,18 +43,18 @@ export default class Menu extends Component {
           </input>
         );
       }
-        return (
-          <span key = { ix }
-                style = {styles.buttonStyle}>
-          <RaisedButton key = {elem.name}
-                        label = { elem.name }
-                        onChange = {elem.handleChange}
-                        onClick = {elem.action}
-          >
-            {potentialInput}
-          </RaisedButton>
-          </span>
-        );
+      return (
+        <span key = { ix }
+              style = {styles.buttonStyle}>
+        <RaisedButton key = {elem.name}
+                      label = { elem.name }
+                      onChange = {elem.handleChange}
+                      onClick = {elem.action}
+        >
+          {potentialInput}
+        </RaisedButton>
+        </span>
+      );
     });
 
 
@@ -60,8 +69,4 @@ export default class Menu extends Component {
   }
 }
 
-Menu.propTypes = {
-  action: React.PropTypes.func,
-  elements: React.PropTypes.array,
-  files: React.PropTypes.object
-};
+export default connector(Menu);
