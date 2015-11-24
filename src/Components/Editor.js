@@ -23,14 +23,19 @@ import './../../node_modules/codemirror/addon/lint/javascript-lint';
 
 const connector = connect(function(state, props){
   //State from redux
-  return ({challenge: state.challenges.reduce(function(prevC, challenge){
-    if(challenge.id === props.id) {
-      return(challenge)
+  return (
+    {
+      challenge: state.challenges.reduce(function(prevC, challenge){
+        if(challenge.id === props.id) {
+          return(challenge)
+        }
+        else {
+          return(prevC);
+        }
+      }, {}),
+      activeFile: state.activeFile
     }
-    else {
-      return(prevC);
-    }
-  }, {})});
+  );
 });
 
 class Editor extends Component {
@@ -52,8 +57,12 @@ class Editor extends Component {
     });
 
     unrenderedCodeMirrors = codeMirrorData.map(function(data){
-      if(Array.isArray(data[1])){
-        data[1] = data[1].join('\n')
+      if (Array.isArray(data[1])){
+        if (data[0] === 'tests') {
+          data[1] = data[1].join('EOL\n');
+        } else {
+          data[1] = data[1].join('\n');
+        }
      }
      return(
      <div key = {data[0]}>
@@ -73,6 +82,7 @@ class Editor extends Component {
     let codeMirrors = [];
     const dispatch = this.props.dispatch;
     const challengeId = this.props.challenge.id;
+    const activeFile = this.props.activeFile;
     const challengeType = this.props.challenge.challengeType;
 
     this.state.codeMirrorData.map(function(codeMirror) {
@@ -99,13 +109,13 @@ class Editor extends Component {
       });
 
       editor.on('change', function(instance, changeObj){
-
         updateChallenge(dispatch,
           {
             id: challengeId,
             props: {
-              [codeMirror[0]]: instance.getValue() + changeObj.text
-            }
+              [codeMirror[0]]: instance.getValue()
+            },
+            activeFile: activeFile
 
           }
         );
