@@ -86,20 +86,31 @@ class Editor extends Component {
 
     this.state.codeMirrorData.map(function(codeMirror) {
       // Determine mode
-      let mode = 'text';
-      if (codeMirror[0] === 'tests' ||
-          ((codeMirror[0] === 'challengeSeed' ||
-            codeMirror[0] === 'solutions') && challengeType === 5)) {
-        mode = 'javascript';
-      } else {
-        mode = 'htmlmixed';
+      let mode = 'htmlmixed';
+      /* eslint-disable no-fallthrough */
+      switch (codeMirror[0]) {
+        case 'challengeSeed':
+        case 'solutions':
+          if (challengeType !== 5 && challengeType !== 1) {
+            mode = 'htmlmixed';
+            break;
+          }
+        case 'head':
+        case 'tail':
+        case 'tests':
+          mode = 'javascript';
+          break;
+        default:
+          mode = 'htmlmixed';
+          break;
       }
+      /* eslint-enable no-fallthrough */
 
       let editor = CodeMirror.fromTextArea(
         document.getElementById(codeMirror[0]),
         {
           lineNumbers: true,
-          mode: mode || 'text',
+          mode: mode,
           theme: 'monokai',
           runnable: true,
           matchBrackets: true,
@@ -143,4 +154,3 @@ Editor.propTypes = {
   activeFile: React.PropTypes.string.isRequired,
   dispatch: React.PropTypes.func.isRequired
 };
-
