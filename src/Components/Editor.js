@@ -1,5 +1,5 @@
 import './../../node_modules/codemirror/lib/codemirror.css';
-import './../../node_modules/codemirror/theme/dracula.css';
+import './../../node_modules/codemirror/theme/monokai.css';
 import './../../node_modules/codemirror/addon/scroll/simplescrollbars.css';
 
 import React, {Component} from 'react';
@@ -10,12 +10,16 @@ import {connect} from 'react-redux';
 
 import CodeMirror from './../../node_modules/codemirror/lib/codemirror';
 import './../../node_modules/codemirror/mode/javascript/javascript';
+import './../../node_modules/codemirror/mode/xml/xml';
+import './../../node_modules/codemirror/mode/css/css';
+import './../../node_modules/codemirror/mode/htmlmixed/htmlmixed';
 import './../../node_modules/codemirror/addon/edit/closebrackets';
 import './../../node_modules/codemirror/addon/edit/matchbrackets';
 import './../../node_modules/codemirror/addon/scroll/simplescrollbars';
 import './../../node_modules/codemirror/addon/scroll/annotatescrollbar';
 import './../../node_modules/codemirror/addon/scroll/scrollpastend';
 import './../../node_modules/codemirror/addon/lint/lint';
+import './../../node_modules/codemirror/addon/lint/javascript-lint';
 
 const connector = connect(function(state, props){
   //State from redux
@@ -69,12 +73,23 @@ class Editor extends Component {
     let codeMirrors = [];
     const dispatch = this.props.dispatch;
     const challengeId = this.props.challenge.id;
+    const challengeType = this.props.challenge.challengeType;
 
-    this.state.codeMirrorData.map(function(codeMirror){
+    this.state.codeMirrorData.map(function(codeMirror) {
+      // Determine mode
+      let mode = 'text';
+      if (codeMirror[0] === 'tests' ||
+          ((codeMirror[0] === 'challengeSeed' ||
+          codeMirror[0] === 'solutions') && challengeType === 5)) {
+            mode = 'javascript';
+          } else {
+            mode = 'htmlmixed';
+          }
+
       let editor = CodeMirror.fromTextArea(document.getElementById(codeMirror[0]), {
         lineNumbers: true,
-        mode: 'javascript',
-        theme: 'dracula',
+        mode: mode || 'text',
+        theme: 'monokai',
         runnable: true,
         matchBrackets: true,
         autoCloseBrackets: true,
