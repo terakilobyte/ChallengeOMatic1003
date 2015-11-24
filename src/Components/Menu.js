@@ -27,10 +27,6 @@ const connector = connect(function(state) {
 
 class Menu extends Component {
 
-  static propTypes = {
-    elements: React.PropTypes.array.isRequired
-  }
-
   constructor(props) {
     super(props);
   }
@@ -41,8 +37,8 @@ class Menu extends Component {
       if (elem.name === 'Choose File') {
         potentialInput = (
           <input
-            style = {styles.fileInput}>
-            type = 'file' multiple
+            style = {styles.fileInput}
+            type = 'file' multiple>
           </input>
         );
       }
@@ -71,3 +67,8 @@ class Menu extends Component {
 }
 
 export default connector(Menu);
+
+Menu.propTypes = {
+  elements: React.PropTypes.array.isRequired
+};
+

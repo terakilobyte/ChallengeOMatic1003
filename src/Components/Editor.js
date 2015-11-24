@@ -4,7 +4,7 @@ import './../../node_modules/codemirror/addon/scroll/simplescrollbars.css';
 
 import React, {Component} from 'react';
 
-import {updateChallenge} from './editorActionsCreator';
+import {updateChallenge} from './../actions/editorActions';
 
 import {connect} from 'react-redux';
 
@@ -38,12 +38,6 @@ const connector = connect(function(state, props) {
 });
 
 class Editor extends Component {
-
-  static propTypes = {
-    challenge: React.PropTypes.object.isRequired,
-    activeFile: React.PropTypes.string.isRequired,
-    dispatch: React.PropTypes.func.isRequired
-  }
 
   constructor(props) {
     super(props);
@@ -143,3 +137,10 @@ class Editor extends Component {
 }
 
 export default connector(Editor);
+
+Editor.propTypes = {
+  challenge: React.PropTypes.object.isRequired,
+  activeFile: React.PropTypes.string.isRequired,
+  dispatch: React.PropTypes.func.isRequired
+};
+

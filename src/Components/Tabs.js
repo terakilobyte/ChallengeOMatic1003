@@ -3,12 +3,6 @@ import {Tab, Tabs} from 'material-ui/lib/tabs';
 
 export default class TabBar extends Component {
 
-  static propTypes = {
-    action: React.PropTypes.object.isRequired,
-    files: React.PropTypes.array.isRequired
-  }
-
-
   constructor(props) {
     super(props);
     this.state = {'activeTab': '', 'tabChange': function() {
@@ -47,3 +41,9 @@ export default class TabBar extends Component {
     );
   }
 }
+
+TabBar.propTypes = {
+  action: React.PropTypes.func.isRequired,
+  files: React.PropTypes.object.isRequired
+};
+

@@ -6,7 +6,7 @@ import {
   createChallenge,
   loadChallenge,
   fileSelect
-} from './editorActionsCreator';
+} from './../actions/editorActions';
 
 import $ from 'jquery';
 
@@ -24,14 +24,6 @@ const connector = connect(function(state) {
 }, null, null, {pure: false});
 
 class GrandCentralStation extends Component {
-
-  static propTypes = {
-    dispatch: React.PropTypes.func.isRequired,
-    fileStore: React.PropTypes.object,
-    activeFile: React.PropTypes.string,
-    view: React.PropTypes.string.isRequired,
-    activeChallenge: React.PropTypes.object
-  }
 
   constructor(props) {
     super(props);
@@ -225,3 +217,12 @@ class GrandCentralStation extends Component {
 }
 
 export default connector(GrandCentralStation);
+
+GrandCentralStation.propTypes = {
+  dispatch: React.PropTypes.func.isRequired,
+  fileStore: React.PropTypes.object,
+  activeFile: React.PropTypes.string,
+  view: React.PropTypes.string.isRequired,
+  activeChallenge: React.PropTypes.object
+};
+
