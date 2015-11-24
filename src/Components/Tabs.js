@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Tab, Tabs} from 'material-ui/lib/tabs';
 
-export default class TabBar extends Component{
-  constructor(props){
-    super (props);
+export default class TabBar extends Component {
+
+  constructor(props) {
+    super(props);
     this.state = {'activeTab': '', 'tabChange': function() {
       this.props.action((arguments[1].split(/\=1\$/gi)[1])
         .replace(/\=01/gi, '.'));
@@ -12,12 +13,12 @@ export default class TabBar extends Component{
     }};
   }
 
-  render(){
+  render() {
     let fileNames = [];
     let FileElements = [];
-    for (var i in this.props.files) {
+    for (let i in this.props.files) {
       let file = this.props.files[i];
-      if(file !== undefined){
+      if (file !== undefined) {
         fileNames.push(i);
         FileElements.push(
           <Tab key= { i }
@@ -30,11 +31,19 @@ export default class TabBar extends Component{
         );
       }
     }
-    return(<Tabs onActive = { this.props.action }
-          valueLink={{value: this.state.activeTab,
+    return (
+      <Tabs onActive = { this.props.action }
+            valueLink={{value: this.state.activeTab,
                     requestChange: function() {console.log('tab changes');}}
                   }>
-      {FileElements}
-    </Tabs>);
+        {FileElements}
+      </Tabs>
+    );
   }
 }
+
+TabBar.propTypes = {
+  action: React.PropTypes.func.isRequired,
+  files: React.PropTypes.object.isRequired
+};
+

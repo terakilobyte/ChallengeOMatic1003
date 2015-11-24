@@ -1,40 +1,40 @@
 export function backAction(dispatch, payload) {
-  dispatch ({
+  dispatch({
     type: 'backAction',
     payload
   });
 }
 
 export function loadFile(dispatch, payload) {
-  dispatch ({
+  dispatch({
     type: 'loadFile',
     payload
   });
 }
 
 export function createChallenge(dispatch, payload) {
-  dispatch ({
+  dispatch({
     type: 'createChallenge',
     payload
   });
 }
 
 export function loadChallenge(dispatch, payload) {
-  dispatch ({
+  dispatch({
     type: 'loadChallenge',
     payload
   });
 }
 
 export function fileSelect(dispatch, payload) {
-  dispatch ({
+  dispatch({
     type: 'fileSelect',
     payload
   });
 }
 
 export function updateChallenge(dispatch, payload) {
-  dispatch ({
+  dispatch({
     type: 'updateChallenge',
     payload
   });

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import store from './../store';
 
 import RaisedButton from 'material-ui/lib/raised-button';
 
@@ -20,11 +19,11 @@ const styles = {
   }
 };
 
-const connector = connect(function(state, props){
-  return(
+const connector = connect(function(state) {
+  return (
     state
   );
-},null, null, {pure: false});
+}, null, null, {pure: false});
 
 class Menu extends Component {
 
@@ -38,8 +37,8 @@ class Menu extends Component {
       if (elem.name === 'Choose File') {
         potentialInput = (
           <input
-            type = 'file' multiple
-            style = {styles.fileInput}>
+            style = {styles.fileInput}
+            type = 'file' multiple>
           </input>
         );
       }
@@ -57,8 +56,6 @@ class Menu extends Component {
       );
     });
 
-
-
     return (
       <div>
         <ul>
@@ -70,3 +67,8 @@ class Menu extends Component {
 }
 
 export default connector(Menu);
+
+Menu.propTypes = {
+  elements: React.PropTypes.array.isRequired
+};
+

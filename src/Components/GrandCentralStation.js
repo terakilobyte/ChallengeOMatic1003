@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import store from './../store';
 import {
   backAction,
   loadFile,
   createChallenge,
   loadChallenge,
   fileSelect
-} from './editorActionsCreator';
+} from './../actions/editorActions';
 
 import $ from 'jquery';
 
@@ -18,13 +17,14 @@ import Editor from './Editor';
 
 import './../style.css';
 
-const connector = connect(function(state, props){
-  return(
+const connector = connect(function(state) {
+  return (
     state
   );
-},null, null, {pure: false});
+}, null, null, {pure: false});
 
 class GrandCentralStation extends Component {
+
   constructor(props) {
     super(props);
     this.backView = this.backView.bind(this);
@@ -44,7 +44,7 @@ class GrandCentralStation extends Component {
   exportFiles() {
     $.post('/export', {
       data: this.props.fileStore,
-      success: function(data){
+      success: function(data) {
         console.log(data);
       }
     });
@@ -60,6 +60,7 @@ class GrandCentralStation extends Component {
   }
 
   handleFileIsSelected(event) {
+
     let files = event.target.files;
     for (let i in files) {
       if (files.hasOwnProperty(i)) {
@@ -72,7 +73,7 @@ class GrandCentralStation extends Component {
           newFileStoreObject[file.name] =
             JSON.parse(upload.target.result);
 
-          loadFile (dispatch, {
+          loadFile(dispatch, {
             fileStore: newFileStoreObject,
             activeFile: file.name,
             challenges: newFileStoreObject[file.name].challenges,
@@ -90,56 +91,54 @@ class GrandCentralStation extends Component {
     let oldFileStore = this.props.fileStore;
     let currentFile = this.props.activeFile;
 
-    if(id === 'new'){
-      $.getJSON('/mongoid', function(mongoid){
+    if (id === 'new') {
+      $.getJSON('/mongoid', function(mongoid) {
         mongoid = mongoid.objectId;
-        
         oldFileStore[currentFile].challenges.push({
-            "id": mongoid,
-            "title": mongoid,
-            "description": [
-          	  ""
-            ],
-            "tests": [
-          	  ""
-            ],
-            "challengeSeed": [
-              ""
-            ],
-            "MDNlinks": [
-          	  ""
-            ],
-            "solutions": [
-          	  ""
-            ],
-            "type": "",
-            "challengeType": 0,
-            "nameCn": "",
-            "descriptionCn": [],
-            "nameFr": "",
-            "descriptionFr": [],
-            "nameRu": "",
-            "descriptionRu": [],
-            "nameEs": "",
-            "descriptionEs": [],
-            "namePt": "",
-            "descriptionPt": []
+          'id': mongoid,
+          'title': mongoid,
+          'description': [
+            ''
+          ],
+          'tests': [
+            ''
+          ],
+          'challengeSeed': [
+            ''
+          ],
+          'MDNlinks': [
+            ''
+          ],
+          'solutions': [
+            ''
+          ],
+          'type': '',
+          'challengeType': 0,
+          'nameCn': '',
+          'descriptionCn': [],
+          'nameFr': '',
+          'descriptionFr': [],
+          'nameRu': '',
+          'descriptionRu': [],
+          'nameEs': '',
+          'descriptionEs': [],
+          'namePt': '',
+          'descriptionPt': []
         });
-        
+
         let AddedChallenge = {fileStore: oldFileStore};
-        
-        createChallenge(dispatch, 
-          AddedChallenge
-        );
-      })
-    }
-    else {
+
+        createChallenge(dispatch,
+                        AddedChallenge
+                       );
+      });
+    } else {
       loadChallenge(dispatch, {
         'activeChallenge':
-          this.props.fileStore[this.props.activeFile]
-            .challenges.filter((challenge) => {
-              return challenge.id === id;
-            }).pop(), 'view': 'ChallengeEdit'
+        this.props.fileStore[this.props.activeFile]
+          .challenges.filter((challenge) => {
+            return challenge.id === id;
+          }).pop(), 'view': 'ChallengeEdit'
       });
     }
   }
@@ -175,37 +174,42 @@ class GrandCentralStation extends Component {
       ];
     }
 
-    if (this.props !== null && this.props.fileStore && Object.keys(this.props.fileStore).length) {
-      selectChallenges = <SelectChallenge
-        data = {this.props.fileStore[this.props.activeFile]}
-        challengeClick = {this.handleChallengeClick}
-        />;
+    if (this.props !== null
+        && this.props.fileStore
+        && Object.keys(this.props.fileStore).length) {
+      selectChallenges = (
+        <SelectChallenge
+          challengeClick = {this.handleChallengeClick}
+          data = {this.props.fileStore[this.props.activeFile]}
+        />
+      );
     }
 
     let menu =
-      <Menu elements = {elements} />;
+          <Menu elements = {elements} />;
 
     let tabs;
 
     tabs = Object.keys(this.props.fileStore).length === 0 ? ''
-      : <TabBar action = {this.handleFileSelect} files = {this.props.fileStore} />;
+      : <TabBar action = {this.handleFileSelect}
+           files = {this.props.fileStore} />;
 
     if (Object.keys(this.props.view === 'ChallengeEdit' &&
-        this.props.activeChallenge).length) {
+                    this.props.activeChallenge).length) {
       return (
-        <div className = 'app'>
+          <div className = 'app'>
           {menu}
-          {tabs}
+        {tabs}
           <Editor id={this.props.activeChallenge.id} />
-        </div>
+          </div>
       );
     } else {
 
       return (
-        <div className = 'app'>
+          <div className = 'app'>
           {menu}
-          {tabs}
-          {selectChallenges}
+        {tabs}
+        {selectChallenges}
         </div>
       );
     }
@@ -213,3 +217,12 @@ class GrandCentralStation extends Component {
 }
 
 export default connector(GrandCentralStation);
+
+GrandCentralStation.propTypes = {
+  dispatch: React.PropTypes.func.isRequired,
+  fileStore: React.PropTypes.object,
+  activeFile: React.PropTypes.string,
+  view: React.PropTypes.string.isRequired,
+  activeChallenge: React.PropTypes.object
+};
+
