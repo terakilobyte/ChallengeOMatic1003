@@ -6,35 +6,35 @@ const initialState = {
 };
 
 function parser(key) {
-  switch(key) {
-    case "description":
-    case "descriptionEs":
-    case "descriptionRu":
-    case "descriptionCn":
-    case "descriptionFr":
-    case "MDNlinks":
-    case "solutions":  // NOTE:  This only works for one solution
+  switch (key) {
+    case 'description':
+    case 'descriptionEs':
+    case 'descriptionRu':
+    case 'descriptionCn':
+    case 'descriptionFr':
+    case 'MDNlinks':
+    case 'solutions':  // NOTE:  This only works for one solution
       return function(val) { return val.split('\n'); };
-    case "tests":
+    case 'tests':
       return function(val) { return val.split('EOL\n'); };
     default:
       return function(val) { return val; };
   }
 }
 
-export default function (prevState = initialState, action) {
+export default function(prevState = initialState, action) {
   switch (action.type) {
 
     case 'updateChallenge':
       let challenges = prevState.challenges.slice();
-      challenges = challenges.map(function(challenge){
-        if(challenge.id === action.payload.id){
+      challenges = challenges.map(function(challenge) {
+        if (challenge.id === action.payload.id) {
           Object.keys(action.payload.props).forEach(function(key) {
             action.payload.props[key] = parser(key)(action.payload.props[key]);
           });
           return Object.assign({}, challenge, action.payload.props);
         }
-        return(challenge);
+        return (challenge);
       });
 
       let fileStore = prevState.fileStore;
@@ -47,26 +47,24 @@ export default function (prevState = initialState, action) {
       newState.challenges = challenges;
       Object.assign({}, newState, newFileStore);
 
-      return(Object.assign({}, prevState, newState));
+      return (Object.assign({}, prevState, newState));
 
-      break;
     case 'createChallenge':
-      return(Object.assign({}, prevState, action.payload));
-      break;
+      return (Object.assign({}, prevState, action.payload));
+
     case 'loadChallenge':
-      return(Object.assign({}, prevState, action.payload));
-      break;
+      return (Object.assign({}, prevState, action.payload));
+
     case 'loadFile':
-      return(Object.assign({}, prevState, action.payload));
-      break;
+      return (Object.assign({}, prevState, action.payload));
+
     case 'fileSelect':
-      return(Object.assign({}, prevState, action.payload));
-      break;
+      return (Object.assign({}, prevState, action.payload));
+
     case 'backAction':
-      return(Object.assign({}, prevState, action.payload));
-      break;
+      return (Object.assign({}, prevState, action.payload));
+
     default:
-      return(prevState);
-      break;
+      return (prevState);
   }
 }
