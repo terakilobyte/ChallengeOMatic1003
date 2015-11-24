@@ -1,4 +1,4 @@
-import editorRed from './Components/editorReducers'
+import editorRed from './Components/editorReducers';
 import {createStore} from 'redux';
 
 let store = createStore(editorRed);
