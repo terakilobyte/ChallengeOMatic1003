@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GrandCentralStation from './Components/GrandCentralStation';
+import GrandCentralStation from './components/GrandCentralStation';
 
 export default class App extends Component {
   render() {
